@@ -1,0 +1,132 @@
+:root{
+    --bg:#0b1220;
+    --card:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.12);
+    --text:#e6edf3;
+    --muted:#9fb0c0;
+    --primary:#e6edf3;
+}
+
+body{
+    margin:0;
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+}
+
+/* Background subtle gradient */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(900px 600px at 20% 15%, rgba(96,165,250,.18), transparent 60%),
+        radial-gradient(800px 600px at 80% 25%, rgba(244,114,182,.16), transparent 55%);
+    z-index:-1;
+}
+
+/* Card */
+.auth-card{
+    width:100%;
+    max-width:420px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+    backdrop-filter: blur(12px);
+}
+
+.auth-title{
+    text-align:center;
+    font-size:26px;
+    font-weight:900;
+    margin-bottom:25px;
+}
+
+/* Inputs */
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    margin-bottom:6px;
+    color:var(--muted);
+    font-weight:600;
+}
+
+input{
+    width:90%;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,.25);
+    color:var(--text);
+    outline:none;
+    transition:.15s ease;
+}
+
+input:focus{
+    border-color:rgba(255,255,255,.35);
+    background:rgba(0,0,0,.35);
+}
+
+/* Button */
+.btn-auth{
+    width:100%;
+    padding:12px;
+    border-radius:14px;
+    border:none;
+    background:var(--primary);
+    color:#0b1220;
+    font-weight:900;
+    cursor:pointer;
+    transition:.15s ease;
+}
+
+.btn-auth:hover{
+    transform:translateY(-2px);
+    opacity:.95;
+}
+
+/* Links */
+.auth-links{
+    margin-top:15px;
+    text-align:center;
+    font-size:13px;
+}
+
+.auth-links a{
+    color:var(--muted);
+    text-decoration:none;
+    transition:.15s ease;
+}
+
+.auth-links a:hover{
+    color:var(--text);
+}
+
+/* Errors */
+.invalid-feedback{
+    font-size:12px;
+    color:#ff6b6b;
+    margin-top:5px;
+}
+
+/* Remember checkbox */
+.form-check{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.form-check input{
+    width:auto;
+}

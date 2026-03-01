@@ -1,0 +1,134 @@
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b1220;color:#e6edf3;}
+.navbar{display: none;}
+.teams-container{max-width:1100px;margin:0 auto;padding:28px 16px 40px;}
+
+.teams-topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.teams-title{font-size:26px;font-weight:900;margin:0;}
+.teams-sub{margin:6px 0 0;color:#9fb0c0;font-size:13px;}
+.teams-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px;
+  color:#0b1220;background:#e6edf3;border:1px solid rgba(255,255,255,25);
+  cursor:pointer;transition:transform .12s ease,opacity .12s ease;
+}
+.btn:hover{transform:translateY(-1px);opacity:.92;}
+.btn.secondary{background:transparent;color:#e6edf3;border:1px solid rgba(255,255,255,18);}
+.btn.danger{background:rgba(255,80,80,18);color:#ffd7d7;border:1px solid rgba(255,80,80,30);}
+
+.btn.tiny{padding:8px 10px;border-radius:10px;font-size:12px;}
+.btn.tiny.danger{background:rgba(255,80,80,16);}
+
+.flash{border-radius:14px;padding:12px 14px;margin:12px 0;border:1px solid rgba(255,255,255,12);background:rgba(255,255,255,06);}
+.flash.success{border-color:rgba(34,197,94,35);background:rgba(34,197,94,10);}
+.flash.error{border-color:rgba(255,80,80,35);background:rgba(255,80,80,10);}
+
+.panel{background:rgba(255,255,255,06);border:1px solid rgba(255,255,255,10);border-radius:16px;padding:14px;margin:14px 0;}
+.team-form{display:grid;gap:10px;}
+.label{font-size:13px;color:#9fb0c0;font-weight:700;}
+.input{
+  width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,12);
+  background:rgba(0,0,0,20);color:#e6edf3;outline:none;
+}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
+.teams-grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:14px;margin-top:10px;}
+@media(min-width:800px){.teams-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.team-card{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,10);border-radius:16px;
+  padding:14px;box-shadow:0 10px 30px rgba(0,0,0,25);
+}
+.team-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.team-name{margin:0;font-size:18px;font-weight:900;color: #9fb0c0;}
+.team-meta{font-size:12px;color:#9fb0c0;}
+.team-card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+
+/* =========================
+   Teams list – sprites preview
+   ========================= */
+
+.team-sprites{
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0, 1fr));
+  gap:10px;
+  margin-top:12px;
+}
+
+.team-sprite{
+  height:56px;
+  border-radius:14px;
+  background:rgba(0,0,0,16);
+  border:1px solid rgba(255,255,255,10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.team-sprite img{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+}
+
+.team-sprite-empty{
+  font-weight:900;
+  opacity:.5;
+}
+
+.empty{background:rgba(255,255,255,06);border:1px solid rgba(255,255,255,10);border-radius:16px;padding:16px;margin-top:10px;color: #9fb0c0;}
+
+.slots-grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:14px;margin-top:16px;}
+@media(min-width:740px){.slots-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(min-width:1040px){.slots-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+
+.slot-card{
+  background:rgba(255,255,255,06);border:1px solid rgba(255,255,255,10);border-radius:16px;
+  padding:14px;box-shadow:0 10px 30px rgba(0,0,0,25);
+}
+
+.slot-card .slot-body {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slot-card .slot-sprite {
+  margin: 6px auto 10px;
+}
+
+.slot-card .slot-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.slot-card .slot-name {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 900;
+  color: #0b1220;
+}
+
+.slot-card .slot-meta {
+  margin: 0;
+  font-size: 12px;
+  color: #9fb0c0;
+}
+
+.slot-card .slot-actions {
+  justify-content: center;
+}
+
+.slot-card .slot-actions a {
+  text-align: center;
+}
+
+.btn.tiny {
+  margin-left: 8%;
+}

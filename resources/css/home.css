@@ -1,0 +1,171 @@
+  :root{
+            --bg:#0b1220;
+            --text:#e6edf3;
+            --muted:#9fb0c0;
+        }
+
+        *{ box-sizing:border-box; }
+
+        body{
+            margin:0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow:hidden;
+        }
+
+        /* Background gradient */
+        .bg{
+            position:fixed;
+            inset:0;
+            z-index:0;
+            background:
+                radial-gradient(900px 600px at 25% 15%, rgba(96,165,250,.18), transparent 60%),
+                radial-gradient(800px 600px at 75% 25%, rgba(244,114,182,.16), transparent 55%),
+                radial-gradient(800px 800px at 50% 90%, rgba(52,211,153,.10), transparent 60%);
+        }
+
+        /* Vertical scroll container */
+        .marquee-wrap{
+            position:absolute;
+            inset:0;
+            overflow:hidden;
+            opacity:.6;
+        }
+
+        .marquee{
+            display:flex;
+            flex-direction:column;
+            gap:20px;
+            animation: scrollY 100s linear infinite;
+        }
+
+        @keyframes scrollY{
+            from { transform: translateY(0); }
+            to   { transform: translateY(-50%); }
+        }
+
+        /* Each row contains 5 pokémon */
+        .row{
+            display:grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap:20px;
+            padding: 0 40px;
+        }
+
+        /* Bigger cards */
+        .mini{
+            height:120px;
+            border-radius:22px;
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12);
+            box-shadow:0 10px 28px rgba(0,0,0,.35);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            gap:6px;
+            backdrop-filter: blur(6px);
+        }
+
+        .mini img{
+            width:80px;
+            height:80px;
+            object-fit:contain;
+        }
+
+        .mini .n{
+            font-weight:900;
+            font-size:13px;
+            text-align:center;
+        }
+
+        /* Foreground panel */
+        .content{
+            position:relative;
+            z-index:2;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:28px 16px;
+        }
+
+        .panel{
+            width:min(800px, 100%);
+            border-radius:26px;
+            background:rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.15);
+            box-shadow:0 25px 70px rgba(0,0,0,.6);
+            padding:28px;
+            backdrop-filter: blur(14px);
+            text-align:center;
+        }
+
+        .kicker{
+            display:inline-block;
+            padding:6px 14px;
+            border-radius:999px;
+            background:rgba(0,0,0,.25);
+            border:1px solid rgba(255,255,255,.12);
+            color:var(--muted);
+            font-weight:800;
+            font-size:12px;
+        }
+
+        h1{
+            margin:16px 0 14px;
+            font-size:36px;
+        }
+
+        p{
+            color:var(--muted);
+            font-size:15px;
+            line-height:1.6;
+            margin-bottom:20px;
+        }
+
+        .actions{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:12px 18px;
+            border-radius:16px;
+            text-decoration:none;
+            font-weight:900;
+            font-size:14px;
+            border:1px solid rgba(255,255,255,.2);
+            cursor:pointer;
+            transition:.15s ease;
+        }
+
+        .btn.primary{
+            background:#e6edf3;
+            color:#0b1220;
+        }
+
+        .btn.secondary{
+            background:transparent;
+            color:var(--text);
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            opacity:.95;
+        }
+
+        /* vignette */
+        .vignette{
+            position:fixed;
+            inset:0;
+            z-index:1;
+            pointer-events:none;
+            background: radial-gradient(70% 60% at 50% 50%, transparent 35%, rgba(0,0,0,.7) 100%);
+        }
