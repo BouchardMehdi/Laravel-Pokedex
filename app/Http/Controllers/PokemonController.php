@@ -13,13 +13,17 @@ class PokemonController extends Controller
     {
         $query = Pokemon::query();
 
-        // Ne garder que les “pokemons de base” (pas les variantes slug)
+        /**
+         * On garde seulement les pokémons "de base"
+         * (les variantes sont gérées via forms JSON)
+         */
         $query->where(function ($q) {
             $q->whereNull('slug')
               ->orWhere(function ($qq) {
                   $qq->where('slug', 'not like', '%-alola%')
                      ->where('slug', 'not like', '%-galar%')
                      ->where('slug', 'not like', '%-hisui%')
+                     ->where('slug', 'not like', '%-paldea%')
                      ->where('slug', 'not like', '%-mega%')
                      ->where('slug', 'not like', 'mega-%')
                      ->where('slug', 'not like', '%-gmax%')
@@ -27,8 +31,11 @@ class PokemonController extends Controller
               });
         });
 
+        // -----------------------------
+        // Filtres classiques
+        // -----------------------------
         if ($q = $request->query('q')) {
-            $query->where('name', 'like', "%$q%");
+            $query->where('name', 'like', "%{$q}%");
         }
 
         if ($gen = $request->query('generation')) {
@@ -52,30 +59,74 @@ class PokemonController extends Controller
             };
         }
 
-        // ✅ NOUVEAU : filtre forme
+        // -----------------------------
+        // ✅ FILTRE FORMES (FIX DB ACTUELLE)
+        // -----------------------------
         if ($form = $request->query('form')) {
+
+            $query->whereNotNull('forms')
+                  ->where('forms', '!=', '')
+                  ->where('forms', '!=', '[]')
+                  ->where('forms', '!=', '{}');
+
             switch ($form) {
+
                 case 'mega':
-                    $query->whereNotNull('image_mega')->where('image_mega', '!=', '');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"mega%')
+                          ->orWhere('forms', 'like', '%Mega%');
+                    });
                     break;
+
                 case 'gmax':
-                    $query->whereNotNull('image_gmax')->where('image_gmax', '!=', '');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"gmax%')
+                          ->orWhere('forms', 'like', '%"gigantamax%')
+                          ->orWhere('forms', 'like', '%Gigantamax%');
+                    });
                     break;
+
                 case 'alola':
-                    $query->whereNotNull('image_alola')->where('image_alola', '!=', '');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"alola%')
+                          ->orWhere('forms', 'like', '%"alolan%')
+                          ->orWhere('forms', 'like', '%Alola%')
+                          ->orWhere('forms', 'like', '%Alolan%');
+                    });
                     break;
+
                 case 'galar':
-                    $query->whereNotNull('image_galar')->where('image_galar', '!=', '');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"galar%')
+                          ->orWhere('forms', 'like', '%Galar%');
+                    });
                     break;
+
                 case 'hisui':
-                    $query->whereNotNull('image_hisui')->where('image_hisui', '!=', '');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"hisui%')
+                          ->orWhere('forms', 'like', '%Hisui%');
+                    });
                     break;
+
+                case 'paldea':
+                    $query->where(function ($q) {
+                        $q->where('forms', 'like', '%"paldea%')
+                          ->orWhere('forms', 'like', '%Paldea%');
+                    });
+                    break;
+
                 case 'other':
-                    // formes “custom” stockées en JSON (Aegislash blade/shield, etc.)
-                    $query->whereNotNull('forms')
-                          ->where('forms', '!=', '')
-                          ->where('forms', '!=', '[]')
-                          ->where('forms', '!=', '{}');
+                    $query->where(function ($q) {
+                        $q->where('forms', 'not like', '%"mega%')
+                          ->where('forms', 'not like', '%"gmax%')
+                          ->where('forms', 'not like', '%"gigantamax%')
+                          ->where('forms', 'not like', '%"alola%')
+                          ->where('forms', 'not like', '%"alolan%')
+                          ->where('forms', 'not like', '%"galar%')
+                          ->where('forms', 'not like', '%"hisui%')
+                          ->where('forms', 'not like', '%"paldea%');
+                    });
                     break;
             }
         }
@@ -98,7 +149,7 @@ class PokemonController extends Controller
                     $q->select('pokemons.id', 'name', 'slug', 'image_default', 'forms')
                       ->orderBy('user_team_pokemon.slot');
                 }])
-                ->orderBy('created_at', 'desc')
+                ->latest()
                 ->get();
         }
 

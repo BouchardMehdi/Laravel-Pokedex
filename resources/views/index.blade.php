@@ -46,12 +46,10 @@
                     🔒 Tout bloquer
                 </button>
 
-                {{-- ✅ NOUVEAU : Débloquer la page --}}
                 <button type="button" class="btn" id="unlockPageBtn" data-url="{{ route('pokemons.unlockPage') }}">
                     🔓 Débloquer cette page
                 </button>
 
-                {{-- ✅ NOUVEAU : Débloquer une génération (celle sélectionnée) --}}
                 <button type="button" class="btn secondary" id="unlockGenBtn" data-url="{{ route('pokemons.unlockGeneration') }}">
                     🔓 Débloquer Gen
                 </button>
@@ -67,7 +65,6 @@
     </div>
 
     <form class="filters" method="GET" action="{{ route('pokemons.index') }}">
-        {{-- ✅ garder les params pick si on filtre --}}
         @if($isPickMode)
             <input type="hidden" name="pick_team" value="{{ $pickTeamId }}">
             <input type="hidden" name="slot" value="{{ $pickSlot }}">
@@ -114,7 +111,7 @@
                 </select>
             </div>
 
-            {{-- ✅ NOUVEAU : filtre forme --}}
+            {{-- ✅ Filtre forme (avec Paldea) --}}
             <div class="field">
                 <label for="form">Forme</label>
                 <select id="form" name="form">
@@ -124,6 +121,7 @@
                     <option value="alola" {{ $formValue === 'alola' ? 'selected' : '' }}>Alola</option>
                     <option value="galar" {{ $formValue === 'galar' ? 'selected' : '' }}>Galar</option>
                     <option value="hisui" {{ $formValue === 'hisui' ? 'selected' : '' }}>Hisui</option>
+                    <option value="paldea" {{ $formValue === 'paldea' ? 'selected' : '' }}>Paldea</option>
                     <option value="other" {{ $formValue === 'other' ? 'selected' : '' }}>Autres formes</option>
                 </select>
             </div>
