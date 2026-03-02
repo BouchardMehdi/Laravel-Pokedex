@@ -43,20 +43,17 @@ body > nav{
   display: none !important;
 }
 
-/* =========================================================
-   PAGE SHOW
-   ========================================================= */
-
 .link {
-  position: absolute;
-  top: 30%;
-  left: 24%;
+  position: fixed;
+  margin-right: 42%;
+  margin-bottom: 18%;
   color: #e6edf3;
   text-decoration: none;
   font-weight: 700;
   z-index: 1;
+  transition: 0.5s ;
 }
-.link:hover{ text-decoration: underline; }
+.link:hover{ transform: scale(1.1); }
 
 .pokemon-show-wrap{
   min-height: calc(100vh - 0px);
@@ -125,7 +122,6 @@ body > nav{
   filter: drop-shadow(0 18px 30px rgba(0,0,0,35));
 }
 
-/* Infos à droite */
 .pokemon-info h1{
   margin: 0 0 10px 0;
   font-size: 34px;
@@ -134,7 +130,6 @@ body > nav{
   color: #ffffff; /* ✅ */
 }
 
-/* ✅ Types lisibles (ton rendu actuel les fait trop clairs/pas visibles) */
 .pokemon-types{
   display: flex;
   flex-wrap: wrap;
@@ -152,7 +147,6 @@ body > nav{
   color: #0b1220;
 }
 
-/* bloc ajout team (mode pick) */
 .pick-actions{
   display:flex;
   gap:10px;
@@ -161,7 +155,7 @@ body > nav{
 }
 .pick-form{ margin:0; }
 
-/* Stats */
+
 .stats{
   display: grid;
   gap: 12px;
@@ -202,7 +196,6 @@ body > nav{
   background: linear-gradient(90deg, #facc15, #fb7185);
 }
 
-/* Boutons (Normal / Mega / Gmax / etc.) */
 .variant-buttons{
   margin-top: 22px;
   display: flex;
@@ -247,7 +240,6 @@ body > nav{
   color: #111827;
 }
 
-/* Petit responsive */
 @media (max-width: 900px){
   .pokemon-card{
     grid-template-columns: 1fr;
@@ -271,4 +263,32 @@ body > nav{
 
   .nav-chevron.left{ left: 10px; }
   .nav-chevron.right{ right: 10px; }
+
+  .variant-btn.shiny-toggle{
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 560px){
+  .pokemon-show-wrap{ padding: 40px 12px; }
+  .link {margin-top: 5%; margin-right: 0%;}
+  .nav-chevron{
+    top: 16px;
+    transform: none;
+    width: 40px;
+    height: 40px;
+    font-size: 26px;
+  }
+  .nav-chevron.left{ left: 12px; }
+  .nav-chevron.right{ right: 12px; }
+
+  .pokemon-info h1{ font-size: 28px; }
+  .stat-row{ grid-template-columns: 70px 1fr 44px; gap: 10px; }
+
+  .variant-buttons{
+    gap: 8px;
+  }
+  .variant-btn{
+    padding: 8px 12px;
+  }
 }

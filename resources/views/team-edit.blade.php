@@ -68,7 +68,7 @@
                         <form method="POST" action="{{ route('teams.slot.clear', ['team' => $team->id, 'slot' => $i]) }}">
                             @csrf
                             @method('DELETE')
-                            <button class="btn tiny danger" type="submit">Retirer</button>
+                            <button class="btn tiny danger edit" type="submit">Retirer</button>
                         </form>
                     @endif
                 </div>
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="slot-actions">
-                        <a class="btn secondary tiny"
+                        <a class="btn tiny change"
                            href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">
                             Changer
                         </a>

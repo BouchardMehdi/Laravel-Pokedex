@@ -52,7 +52,7 @@
                         <form method="POST" action="{{ route('teams.destroy', $team) }}">
                             @csrf
                             @method('DELETE')
-                            <button class="btn tiny danger" type="submit" style="margin-left: 25%; margin-top: -7%;">Supprimer</button>
+                            <button class="btn tiny danger" type="submit">Supprimer</button>
                         </form>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-  :root{
+:root{
             --bg:#0b1220;
             --text:#e6edf3;
             --muted:#9fb0c0;
@@ -144,6 +144,7 @@
             border:1px solid rgba(255,255,255,.2);
             cursor:pointer;
             transition:.15s ease;
+            white-space:nowrap;
         }
 
         .btn.primary{
@@ -169,3 +170,27 @@
             pointer-events:none;
             background: radial-gradient(70% 60% at 50% 50%, transparent 35%, rgba(0,0,0,.7) 100%);
         }
+
+/* ✅ Responsive home: grille des mini cartes */
+@media (max-width: 900px){
+    .row{
+        grid-template-columns: repeat(3, 1fr);
+        padding: 0 18px;
+        gap:14px;
+    }
+    h1{font-size:30px;}
+    .panel{padding:22px;}
+}
+@media (max-width: 560px){
+    body{overflow:hidden;}
+    .row{
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 12px;
+        gap:12px;
+    }
+    .mini{height:110px;border-radius:18px;}
+    .mini img{width:72px;height:72px;}
+    h1{font-size:26px;}
+    .btn{padding:10px 14px;border-radius:14px;font-size:13px;}
+    .panel{padding:18px;border-radius:22px;}
+}

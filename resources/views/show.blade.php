@@ -65,7 +65,7 @@
 
 <div class="pokemon-show-wrap">
 <div class="link type-badge">
-  <a href="{{ route('pokemons.index') }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}">← Retour aux Pokémons</a>
+  <a href="{{ route('pokemons.index') }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}">← Retour aux Pokedex</a>
 </div>
   <div class="pokemon-card">
 
