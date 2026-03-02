@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
       slotEl.appendChild(nameEl);
     });
 
-    // hidden inputs (ordre conservé)
     hiddenInputs.innerHTML = '';
     selected.forEach((pid) => {
       const input = document.createElement('input');

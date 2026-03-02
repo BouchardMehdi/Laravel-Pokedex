@@ -28,7 +28,6 @@ return new class extends Migration {
                 $table->unsignedSmallInteger('speed')->default(0);
             }
 
-            // ✅ évolution (on prépare pour plus tard)
             if (!Schema::hasColumn('pokemons', 'has_evolutions')) {
                 $table->boolean('has_evolutions')->default(false);
             }
@@ -38,7 +37,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('pokemons', function (Blueprint $table) {
-            // On retire uniquement ce qu'on a ajouté
             $toDrop = [];
 
             foreach ([

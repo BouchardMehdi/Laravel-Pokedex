@@ -32,6 +32,7 @@ class TeamController extends Controller
         return view('team-create');
     }
 
+    // Créer team
     public function store(Request $request)
     {
         $request->validate([
@@ -46,6 +47,7 @@ class TeamController extends Controller
             ->with('success', 'Team créée !');
     }
 
+    // modifier team
     public function edit(UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -60,6 +62,7 @@ class TeamController extends Controller
         return view('team-edit', compact('team', 'slots'));
     }
 
+    // Save team
     public function update(Request $request, UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -75,6 +78,7 @@ class TeamController extends Controller
         return back()->with('success', 'Team enregistrée !');
     }
 
+    // supprimer team
     public function destroy(UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -86,6 +90,7 @@ class TeamController extends Controller
             ->with('success', 'Team supprimée.');
     }
 
+    // choisir un pokemon
     public function pick(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -98,6 +103,7 @@ class TeamController extends Controller
         ]);
     }
 
+    // ajoute pokemon dans la team
     public function setSlot(Request $request, UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -123,6 +129,7 @@ class TeamController extends Controller
             ->with('success', "Pokémon ajouté au slot $slot !");
     }
 
+    // supprime pokemon dans la team
     public function clearSlot(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);

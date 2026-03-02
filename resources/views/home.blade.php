@@ -9,7 +9,6 @@
 <body>
 
 @php
-    // ✅ évite l'erreur si $teams n'est pas défini (ex: logout / guest)
     $teams = $teams ?? collect();
 @endphp
 

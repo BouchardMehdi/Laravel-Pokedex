@@ -4,18 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
 use App\Models\UserTeam;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PokemonController extends Controller
 {
+
     private function filteredQuery(Request $request)
     {
         $query = Pokemon::query();
 
         /**
-         * On garde seulement les pokémons "de base"
-         * (les variantes sont gérées via forms JSON)
+         * -------------------------------
+         * EXCLUSION DES FORMES SPÉCIALES
+         * -------------------------------
+         * On exclut :
+         * - formes Alola
+         * - formes Galar
+         * - formes Hisui
+         * - formes Paldea
+         * - Méga-évolutions
+         * - Gigantamax
          */
         $query->where(function ($q) {
             $q->whereNull('slug')
@@ -31,17 +41,23 @@ class PokemonController extends Controller
               });
         });
 
-        // -----------------------------
-        // Filtres classiques
-        // -----------------------------
+        /**
+         * ----------------------------------------
+         * FILTRES CLASSIQUES
+         * ----------------------------------------
+         */
+
+        // nom
         if ($q = $request->query('q')) {
             $query->where('name', 'like', "%{$q}%");
         }
 
+        // generation
         if ($gen = $request->query('generation')) {
             $query->where('generation', (int) $gen);
         }
 
+        // type
         if ($type = $request->query('type')) {
             $query->where(function ($q) use ($type) {
                 $q->where('type1', $type)
@@ -49,6 +65,7 @@ class PokemonController extends Controller
             });
         }
 
+        // special (légendaire, fabuleux, ultre chimère, paradox)
         if ($special = $request->query('special')) {
             match ($special) {
                 'legendary' => $query->where('is_legendary', true),
@@ -59,9 +76,11 @@ class PokemonController extends Controller
             };
         }
 
-        // -----------------------------
-        // ✅ FILTRE FORMES (FIX DB ACTUELLE)
-        // -----------------------------
+        /**
+         * ----------------------------------------
+         * FILTRE SUR LES FORMES DISPONIBLES
+         * ----------------------------------------
+         */
         if ($form = $request->query('form')) {
 
             $query->whereNotNull('forms')
@@ -134,8 +153,10 @@ class PokemonController extends Controller
         return $query;
     }
 
+    // Page d’accueil
     public function home(Request $request)
     {
+        // Affiche les 450 premiers Pokémon filtrés
         $pokemons = $this->filteredQuery($request)
             ->orderBy('pokedex_number')
             ->limit(450)
@@ -143,6 +164,7 @@ class PokemonController extends Controller
 
         $teams = collect();
 
+        // Si utilisateur connecté → on charge ses équipes
         if (Auth::check()) {
             $teams = UserTeam::where('user_id', Auth::id())
                 ->with(['pokemons' => function ($q) {
@@ -156,24 +178,30 @@ class PokemonController extends Controller
         return view('home', compact('pokemons', 'teams'));
     }
 
-    public function index(Request $request)
+
+     // Page liste complète (avec pagination)
+     public function index(Request $request)
     {
+        // Liste paginée (18 par page)
         $pokemons = $this->filteredQuery($request)
             ->orderBy('pokedex_number')
             ->paginate(18)
             ->withQueryString();
 
+        // Liste des générations disponibles
         $generations = Pokemon::select('generation')
             ->distinct()
             ->orderBy('generation')
             ->pluck('generation');
 
+        // Liste des types disponibles
         $types = Pokemon::select('type1')
             ->whereNotNull('type1')
             ->distinct()
             ->orderBy('type1')
             ->pluck('type1');
 
+        // Pokémon débloqués par l’utilisateur
         $unlockedIds = Auth::user()
             ->pokemons()
             ->pluck('pokemon_id')
@@ -182,12 +210,15 @@ class PokemonController extends Controller
         return view('index', compact('pokemons', 'generations', 'types', 'unlockedIds'));
     }
 
+     // Page détail d’un Pokémon
     public function show(Pokemon $pokemon)
     {
+        // Pokémon précédent
         $prevPokemon = Pokemon::where('pokedex_number', '<', $pokemon->pokedex_number)
             ->orderBy('pokedex_number', 'desc')
             ->first();
 
+        // Pokémon suivant
         $nextPokemon = Pokemon::where('pokedex_number', '>', $pokemon->pokedex_number)
             ->orderBy('pokedex_number', 'asc')
             ->first();

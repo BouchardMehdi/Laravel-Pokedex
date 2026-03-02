@@ -54,7 +54,6 @@ class PokemonSeeder extends Seeder
             $imageDefault = $this->normalizeImage($sprites['default_file'] ?? null);
             $imageShiny   = $this->normalizeImage($sprites['shiny_file'] ?? null);
 
-            // ✅ forms devient un objet structuré: suffix => {label, images, types, stats}
             $forms = [];
 
             if (!empty($formsByBase[$baseName])) {
@@ -74,7 +73,6 @@ class PokemonSeeder extends Seeder
                     // Exemple: base=deoxys => deoxys-normal => normal
                     $suffix = $this->suffixFromApi($baseName, $api, $form);
 
-                    // Si on ne peut pas calculer un suffix propre, on skip
                     if (!$suffix) continue;
 
                     $fTypes = $form['types'] ?? [];
@@ -124,7 +122,6 @@ class PokemonSeeder extends Seeder
                 'image_default' => $imageDefault,
                 'image_shiny' => $imageShiny,
 
-                // ✅ array cast côté Model -> on peut stocker direct un array
                 'forms' => json_encode($forms),
 
                 'is_legendary' => (int)($pokemon['is_legendary'] ?? 0),
@@ -163,9 +160,7 @@ class PokemonSeeder extends Seeder
         return $base ?: null;
     }
 
-    /**
-     * Calcule un suffix de forme propre (ex: mega-x, gmax, blade, shield, alola, etc.)
-     */
+    // Calcule un suffix de forme propre (ex: mega-x, gmax, blade, shield, alola, etc.)
     private function suffixFromApi(string $baseName, string $api, array $row): ?string
     {
         // Cas standard: "<base>-<suffix>"

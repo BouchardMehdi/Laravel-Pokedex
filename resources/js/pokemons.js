@@ -93,8 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.closest('.unlock-btn');
     if (!btn) return;
 
-    // si pas de data-url => ce n'est PAS un bouton unlock AJAX
-    // (ex: bouton "Ajouter" en mode team pick dans un <form>)
     const url = btn.dataset.url;
     if (!url) return;
 
@@ -127,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================
-  // 2) SHINY toggle individuel (✨)
+  // 2) SHINY toggle individuel
   // =========================
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.shiny-btn');
@@ -155,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================
-  // 3) GOTO PAGE (Enter + OK)
+  // 3) GO TO PAGE (Enter + OK)
   // =========================
   const gotoInput = document.getElementById('gotoPage');
   const gotoBtn = document.getElementById('gotoBtn');
@@ -179,9 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // =========================
-  // 4) ✅ Tout en shiny (front)
-  // =========================
+  // ===================
+  // 4) Tout en shiny
+  // ===================
   const toggleAllShinyBtn = document.getElementById('toggleAllShinyBtn');
   let allShinyOn = false;
 
@@ -197,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================
-  // 5) ✅ Tout débloquer / Tout bloquer (back)
+  // 5) Tout débloquer / Tout bloquer
   // =========================
   const unlockAllBtn = document.getElementById('unlockAllBtn');
   const lockAllBtn = document.getElementById('lockAllBtn');
@@ -207,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!url) return;
 
     unlockAllBtn.disabled = true;
-    unlockAllBtn.textContent = "⏳ .";
+    unlockAllBtn.textContent = "...";
 
     try {
       const response = await fetch(url, {
@@ -261,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================
-  // 6) ✅ Débloquer cette page
+  // 6) Débloquer cette page
   // =========================
   const unlockPageBtn = document.getElementById('unlockPageBtn');
   unlockPageBtn?.addEventListener('click', async () => {
@@ -279,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     unlockPageBtn.disabled = true;
-    unlockPageBtn.textContent = '⏳ ...';
+    unlockPageBtn.textContent = '...';
 
     try {
       const data = await postJsonBody(url, { ids });
@@ -299,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================
-  // 7) ✅ Débloquer une génération (selon select)
+  // 7) Débloquer une génération (selon select)
   // =========================
   const unlockGenBtn = document.getElementById('unlockGenBtn');
   const generationSelect = document.getElementById('generation');
@@ -315,14 +313,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     unlockGenBtn.disabled = true;
-    unlockGenBtn.textContent = '⏳ ...';
+    unlockGenBtn.textContent = '...';
 
     try {
       const data = await postJsonBody(url, { generation: gen });
 
       if (data.success) {
-        // on met à jour l'UI de la page actuelle (pas toute la gen côté UI)
-        // pour le reste, l'effet est visible en naviguant
         document.querySelectorAll('.card').forEach(card => setCardUnlocked(card, true));
         alert(`Génération ${gen} débloquée !`);
       } else {

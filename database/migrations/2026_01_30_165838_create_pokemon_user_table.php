@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            // ✅ IMPORTANT : on référence la table "pokemons" (pluriel)
             $table->foreignId('pokemon_id')->constrained('pokemons')->cascadeOnDelete();
 
             $table->timestamps();

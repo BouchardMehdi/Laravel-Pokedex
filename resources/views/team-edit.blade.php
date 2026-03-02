@@ -75,10 +75,8 @@
 
                 @if($p)
                     @php
-                        // ✅ Sécurise pivot (évite crash si pivot null)
                         $form = optional($p->pivot)->form ?? 'normal';
 
-                        // ✅ Sécurise JSON forms
                         $forms = is_array($p->forms)
                             ? $p->forms
                             : json_decode($p->forms ?? '{}', true);
@@ -87,7 +85,7 @@
                             $forms = [];
                         }
 
-                        // ✅ Choix de l’image selon la forme stockée
+                        // Choix de l’image selon la forme stockée
                         if ($form === 'normal') {
                             $img = $p->image_default;
                         } else {

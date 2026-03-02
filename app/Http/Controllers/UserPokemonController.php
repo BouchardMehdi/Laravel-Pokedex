@@ -16,7 +16,8 @@ class UserPokemonController extends Controller
 
         return response()->json(['success' => true]);
     }
-
+    
+    // débloquer tous les pokemons
     public function unlockAll()
     {
         $user = Auth::user();
@@ -27,6 +28,7 @@ class UserPokemonController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // bloquer tous les pokemons
     public function lockAll()
     {
         $user = Auth::user();
@@ -35,7 +37,7 @@ class UserPokemonController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ✅ NOUVEAU : débloquer les pokémons affichés sur la page
+    // débloquer les pokemons affichés sur la page
     public function unlockPage(Request $request)
     {
         $request->validate([
@@ -49,7 +51,7 @@ class UserPokemonController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ✅ NOUVEAU : débloquer une génération entière
+    // débloquer une génération entière
     public function unlockGeneration(Request $request)
     {
         $request->validate([

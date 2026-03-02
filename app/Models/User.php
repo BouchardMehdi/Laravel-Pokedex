@@ -39,7 +39,6 @@ class User extends Authenticatable
         )->withTimestamps();
     }
 
-    // ✅ Relation teams
     public function teams()
     {
         return $this->hasMany(\App\Models\UserTeam::class, 'user_id');

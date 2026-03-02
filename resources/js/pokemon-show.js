@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const valEls = Object.fromEntries(statKeys.map(k => [k, document.getElementById(`val-${k}`)]));
   const barEls = Object.fromEntries(statKeys.map(k => [k, document.getElementById(`bar-${k}`)]));
 
-  // ⚙️ Max stat (tu peux changer ici)
   const STAT_MAX = 255;
 
   let currentVariantKey = 'normal';
