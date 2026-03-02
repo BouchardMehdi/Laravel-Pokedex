@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,18 +31,21 @@ class User extends Authenticatable
         ];
     }
 
+    // Pokemons unlocked
     public function pokemons()
     {
-        return $this->belongsToMany(
-            \App\Models\Pokemon::class,
-            'pokemon_user',
-            'user_id',
-            'pokemon_id'
-        )->withTimestamps();
+        return $this->belongsToMany(Pokemon::class)->withTimestamps();
     }
 
+    // Teams
     public function teams()
     {
-        return $this->hasMany(\App\Models\UserTeam::class, 'user_id');
+        return $this->hasMany(UserTeam::class, 'user_id');
+    }
+
+    // Reset password mail
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
     }
 }
