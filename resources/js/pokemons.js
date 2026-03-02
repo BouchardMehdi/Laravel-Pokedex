@@ -24,10 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return response.json().catch(() => ({}));
   }
 
+  async function postJsonBody(url, bodyObj) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyObj || {}),
+    });
+
+    if (!response.ok) {
+      const raw = await response.text().catch(() => '');
+      throw new Error(`HTTP ${response.status} ${raw}`);
+    }
+    return response.json().catch(() => ({}));
+  }
+
   function setCardUnlocked(card, unlocked) {
     const sprite = card.querySelector('.sprite');
     const btn = card.querySelector('.unlock-btn');
     const text = btn?.querySelector('.unlock-text');
+
+    card.dataset.unlocked = unlocked ? '1' : '0';
 
     if (unlocked) {
       sprite?.classList.remove('locked');
@@ -73,10 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.closest('.unlock-btn');
     if (!btn) return;
 
-    // ✅ IMPORTANT :
     // si pas de data-url => ce n'est PAS un bouton unlock AJAX
     // (ex: bouton "Ajouter" en mode team pick dans un <form>)
-    // Donc on laisse le submit normal fonctionner.
     const url = btn.dataset.url;
     if (!url) return;
 
@@ -174,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setCardShiny(card, allShinyOn);
     });
 
-    // feedback bouton
     toggleAllShinyBtn.classList.toggle('active', allShinyOn);
     toggleAllShinyBtn.textContent = allShinyOn ? '✨ Tout normal' : '✨ Tout en shiny';
   });
@@ -240,6 +257,83 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("Erreur pendant 'Tout bloquer'.");
     } finally {
       lockAllBtn.disabled = false;
+    }
+  });
+
+  // =========================
+  // 6) ✅ Débloquer cette page
+  // =========================
+  const unlockPageBtn = document.getElementById('unlockPageBtn');
+  unlockPageBtn?.addEventListener('click', async () => {
+    const url = unlockPageBtn.dataset.url;
+    if (!url) return;
+
+    const ids = Array.from(document.querySelectorAll('.card'))
+      .filter(card => card.dataset.unlocked !== '1')
+      .map(card => parseInt(card.dataset.pokemonId, 10))
+      .filter(n => Number.isFinite(n));
+
+    if (ids.length === 0) {
+      alert("Tous les Pokémon de cette page sont déjà débloqués.");
+      return;
+    }
+
+    unlockPageBtn.disabled = true;
+    unlockPageBtn.textContent = '⏳ ...';
+
+    try {
+      const data = await postJsonBody(url, { ids });
+
+      if (data.success) {
+        document.querySelectorAll('.card').forEach(card => setCardUnlocked(card, true));
+      } else {
+        alert("Réponse invalide serveur.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur pendant 'Débloquer cette page'.");
+    } finally {
+      unlockPageBtn.disabled = false;
+      unlockPageBtn.textContent = '🔓 Débloquer cette page';
+    }
+  });
+
+  // =========================
+  // 7) ✅ Débloquer une génération (selon select)
+  // =========================
+  const unlockGenBtn = document.getElementById('unlockGenBtn');
+  const generationSelect = document.getElementById('generation');
+
+  unlockGenBtn?.addEventListener('click', async () => {
+    const url = unlockGenBtn.dataset.url;
+    if (!url) return;
+
+    const gen = parseInt(generationSelect?.value || '', 10);
+    if (!Number.isFinite(gen)) {
+      alert("Choisis d'abord une génération dans le filtre (Gen 1, Gen 2...).");
+      return;
+    }
+
+    unlockGenBtn.disabled = true;
+    unlockGenBtn.textContent = '⏳ ...';
+
+    try {
+      const data = await postJsonBody(url, { generation: gen });
+
+      if (data.success) {
+        // on met à jour l'UI de la page actuelle (pas toute la gen côté UI)
+        // pour le reste, l'effet est visible en naviguant
+        document.querySelectorAll('.card').forEach(card => setCardUnlocked(card, true));
+        alert(`Génération ${gen} débloquée !`);
+      } else {
+        alert("Réponse invalide serveur.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur pendant 'Débloquer génération'.");
+    } finally {
+      unlockGenBtn.disabled = false;
+      unlockGenBtn.textContent = '🔓 Débloquer Gen';
     }
   });
 });

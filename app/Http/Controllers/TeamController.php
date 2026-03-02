@@ -18,7 +18,7 @@ class TeamController extends Controller
         $teams = Auth::user()
             ->teams()
             ->with(['pokemons' => function ($q) {
-                $q->select('pokemons.id', 'name', 'slug', 'image_default')
+                $q->select('pokemons.id', 'name', 'slug', 'image_default', 'forms', 'pokedex_number')
                   ->orderBy('user_team_pokemon.slot');
             }])
             ->latest()
@@ -60,7 +60,6 @@ class TeamController extends Controller
         return view('team-edit', compact('team', 'slots'));
     }
 
-    // ✅ IMPORTANT : corrige ton 500 sur PUT /teams/{team}
     public function update(Request $request, UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -87,7 +86,6 @@ class TeamController extends Controller
             ->with('success', 'Team supprimée.');
     }
 
-    // clique sur "Choisir" / "Changer" => redirige pokedex en mode pick
     public function pick(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -100,7 +98,6 @@ class TeamController extends Controller
         ]);
     }
 
-    // ✅ Ajout Pokemon dans un slot (doublons autorisés)
     public function setSlot(Request $request, UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -115,10 +112,8 @@ class TeamController extends Controller
         $pokemonId = (int) $request->pokemon_id;
         $form = $request->input('form', 'normal') ?: 'normal';
 
-        // vide uniquement le slot ciblé
         $team->pokemons()->wherePivot('slot', $slot)->detach();
 
-        // attache (même pokemon ailleurs = OK)
         $team->pokemons()->attach($pokemonId, [
             'slot' => $slot,
             'form' => $form,
@@ -128,7 +123,6 @@ class TeamController extends Controller
             ->with('success', "Pokémon ajouté au slot $slot !");
     }
 
-    // ✅ Route utilisée dans team-edit : teams.slot.clear
     public function clearSlot(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);

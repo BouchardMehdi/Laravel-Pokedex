@@ -13,6 +13,7 @@ class PokemonController extends Controller
     {
         $query = Pokemon::query();
 
+        // Ne garder que les “pokemons de base” (pas les variantes slug)
         $query->where(function ($q) {
             $q->whereNull('slug')
               ->orWhere(function ($qq) {
@@ -51,6 +52,34 @@ class PokemonController extends Controller
             };
         }
 
+        // ✅ NOUVEAU : filtre forme
+        if ($form = $request->query('form')) {
+            switch ($form) {
+                case 'mega':
+                    $query->whereNotNull('image_mega')->where('image_mega', '!=', '');
+                    break;
+                case 'gmax':
+                    $query->whereNotNull('image_gmax')->where('image_gmax', '!=', '');
+                    break;
+                case 'alola':
+                    $query->whereNotNull('image_alola')->where('image_alola', '!=', '');
+                    break;
+                case 'galar':
+                    $query->whereNotNull('image_galar')->where('image_galar', '!=', '');
+                    break;
+                case 'hisui':
+                    $query->whereNotNull('image_hisui')->where('image_hisui', '!=', '');
+                    break;
+                case 'other':
+                    // formes “custom” stockées en JSON (Aegislash blade/shield, etc.)
+                    $query->whereNotNull('forms')
+                          ->where('forms', '!=', '')
+                          ->where('forms', '!=', '[]')
+                          ->where('forms', '!=', '{}');
+                    break;
+            }
+        }
+
         return $query;
     }
 
@@ -61,13 +90,12 @@ class PokemonController extends Controller
             ->limit(450)
             ->get(['id', 'name', 'slug', 'pokedex_number', 'image_default']);
 
-        // ✅ Toujours défini (sinon home.blade.php peut crash au logout)
         $teams = collect();
 
         if (Auth::check()) {
             $teams = UserTeam::where('user_id', Auth::id())
                 ->with(['pokemons' => function ($q) {
-                    $q->select('pokemons.id', 'name', 'slug', 'image_default')
+                    $q->select('pokemons.id', 'name', 'slug', 'image_default', 'forms')
                       ->orderBy('user_team_pokemon.slot');
                 }])
                 ->orderBy('created_at', 'desc')

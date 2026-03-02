@@ -24,63 +24,80 @@
         <div class="flash error">{{ session('error') }}</div>
     @endif
 
-    @if($teams->count() === 0)
-        <div class="empty">
-            <p>Aucune team pour l’instant.</p>
-            <a class="btn" href="{{ route('teams.create') }}">Créer ma première team</a>
-        </div>
-    @else
-        <div class="teams-grid">
-            @foreach($teams as $team)
-                @php
-                    $slotMap = [];
-                    foreach($team->pokemons as $p){
-                        $s = (int) ($p->pivot->slot ?? 0);
-                        if($s >= 1 && $s <= 6) $slotMap[$s] = $p;
-                    }
-                @endphp
+    <div class="teams-grid">
+        @forelse($teams as $team)
+            @php
+                // construit un tableau slots 1..6
+                $slots = array_fill(1, 6, null);
+                foreach ($team->pokemons as $p) {
+                    $s = (int) (optional($p->pivot)->slot ?? 0);
+                    if ($s >= 1 && $s <= 6) $slots[$s] = $p;
+                }
 
-                <div class="team-card">
-                    <div class="team-card-top">
-                        <div>
-                            <h3 class="team-name">{{ $team->name }}</h3>
-                            <div class="team-meta">Team #{{ $team->id }} • {{ count($slotMap) }}/6</div>
-                        </div>
+                $filled = 0;
+                foreach ($slots as $sp) if ($sp) $filled++;
+            @endphp
 
-                        {{-- ✅ Boutons actions --}}
-                        <div class="team-card-actions" style="margin-left:65%;">
-                            <a class="btn tiny secondary" href="{{ route('teams.edit', $team) }}" style="background: #0b1220; border: none;">Modifier</a>
-
-                            <form method="POST" action="{{ route('teams.destroy', $team) }}"
-                                  onsubmit="return confirm('Supprimer cette team ?')" style="margin:0;">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn tiny danger" type="submit">Supprimer</button>
-                            </form>
-                        </div>
+            <div class="team-card">
+                <div class="team-head">
+                    <div class="team-meta">
+                        <div class="team-name">{{ $team->name }}</div>
+                        <div class="team-sub">Team #{{ $team->id }}</div>
+                        <div class="team-sub">{{ $filled }}/6</div>
                     </div>
 
-                    {{-- Sprites preview --}}
-                    <div class="team-sprites">
-                        @for($i=1; $i<=6; $i++)
-                            @php
-                                $p = $slotMap[$i] ?? null;
-                                $img = $p?->image_default ?: ($p ? ('images/default/' . ($p->slug ?? $p->name) . '.png') : null);
-                            @endphp
+                    <div class="team-actions">
+                        <a class="btn secondary tiny" href="{{ route('teams.edit', $team) }}">Modifier</a>
 
-                            <div class="team-sprite">
-                                @if($p && $img)
-                                    <img src="{{ asset($img) }}" alt="{{ $p->name }}" loading="lazy" onerror="this.style.display='none'">
-                                @else
-                                    <div class="team-sprite-empty">+</div>
-                                @endif
-                            </div>
-                        @endfor
+                        <form method="POST" action="{{ route('teams.destroy', $team) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn tiny danger" type="submit" style="margin-left: 25%; margin-top: -7%;">Supprimer</button>
+                        </form>
                     </div>
                 </div>
-            @endforeach
-        </div>
-    @endif
+
+                <div class="team-sprites">
+                    @for($i = 1; $i <= 6; $i++)
+                        @php
+                            $p = $slots[$i];
+
+                            if ($p) {
+                                $form = optional($p->pivot)->form ?? 'normal';
+
+                                $forms = is_array($p->forms)
+                                    ? $p->forms
+                                    : json_decode($p->forms ?? '{}', true);
+
+                                if (!is_array($forms)) $forms = [];
+
+                                if ($form === 'normal') {
+                                    $img = $p->image_default;
+                                } else {
+                                    $img = $forms[$form]['image_default'] ?? $p->image_default;
+                                }
+                            }
+                        @endphp
+
+                        @if($p)
+                            <div class="mini-sprite" title="{{ $p->name }} (slot {{ $i }})">
+                                <img src="{{ asset($img) }}" alt="{{ $p->name }}">
+                            </div>
+                        @else
+                            <div class="mini-sprite empty" title="Slot {{ $i }} vide"></div>
+                        @endif
+                    @endfor
+                </div>
+            </div>
+
+        @empty
+            <div class="panel">
+                <div class="teams-empty-title">Aucune team</div>
+                <div class="teams-empty-sub">Crée ta première équipe pour commencer.</div>
+                <a class="btn" href="{{ route('teams.create') }}">Créer une team</a>
+            </div>
+        @endforelse
+    </div>
 
 </div>
 @endsection

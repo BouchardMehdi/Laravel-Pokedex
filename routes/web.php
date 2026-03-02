@@ -29,6 +29,14 @@ Route::post('/pokemons/lock-all', [UserPokemonController::class, 'lockAll'])
     ->middleware('auth')
     ->name('pokemons.lockAll');
 
+Route::post('/pokemons/unlock-page', [UserPokemonController::class, 'unlockPage'])
+    ->middleware('auth')
+    ->name('pokemons.unlockPage');
+
+Route::post('/pokemons/unlock-generation', [UserPokemonController::class, 'unlockGeneration'])
+    ->middleware('auth')
+    ->name('pokemons.unlockGeneration');
+
 Route::middleware('auth')->group(function () {
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
     Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');

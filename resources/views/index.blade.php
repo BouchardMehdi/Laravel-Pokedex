@@ -15,6 +15,8 @@
         $pickTeamId = request('pick_team');
         $pickSlot = request('slot');
         $isPickMode = !empty($pickTeamId) && !empty($pickSlot);
+
+        $formValue = request('form', '');
     @endphp
 
     <div class="topbar">
@@ -42,6 +44,16 @@
 
                 <button type="button" class="btn secondary" id="lockAllBtn" data-url="{{ route('pokemons.lockAll') }}">
                     🔒 Tout bloquer
+                </button>
+
+                {{-- ✅ NOUVEAU : Débloquer la page --}}
+                <button type="button" class="btn" id="unlockPageBtn" data-url="{{ route('pokemons.unlockPage') }}">
+                    🔓 Débloquer cette page
+                </button>
+
+                {{-- ✅ NOUVEAU : Débloquer une génération (celle sélectionnée) --}}
+                <button type="button" class="btn secondary" id="unlockGenBtn" data-url="{{ route('pokemons.unlockGeneration') }}">
+                    🔓 Débloquer Gen
                 </button>
             @endif
 
@@ -101,6 +113,20 @@
                     <option value="paradox"   {{ request('special') === 'paradox'   ? 'selected' : '' }}>Paradox</option>
                 </select>
             </div>
+
+            {{-- ✅ NOUVEAU : filtre forme --}}
+            <div class="field">
+                <label for="form">Forme</label>
+                <select id="form" name="form">
+                    <option value="" {{ $formValue === '' ? 'selected' : '' }}>Toutes</option>
+                    <option value="mega"  {{ $formValue === 'mega'  ? 'selected' : '' }}>Méga</option>
+                    <option value="gmax"  {{ $formValue === 'gmax'  ? 'selected' : '' }}>Gmax</option>
+                    <option value="alola" {{ $formValue === 'alola' ? 'selected' : '' }}>Alola</option>
+                    <option value="galar" {{ $formValue === 'galar' ? 'selected' : '' }}>Galar</option>
+                    <option value="hisui" {{ $formValue === 'hisui' ? 'selected' : '' }}>Hisui</option>
+                    <option value="other" {{ $formValue === 'other' ? 'selected' : '' }}>Autres formes</option>
+                </select>
+            </div>
         </div>
 
         <div class="row-actions">
@@ -126,7 +152,10 @@
                     $hasShiny = !empty($pokemon->image_shiny);
                 @endphp
 
-                <div class="card" data-card-id="{{ $pokemon->id }}">
+                <div class="card"
+                     data-card-id="{{ $pokemon->id }}"
+                     data-pokemon-id="{{ $pokemon->id }}"
+                     data-unlocked="{{ $isUnlocked ? '1' : '0' }}">
                     <div class="card-top">
                         <div class="sprite {{ $isUnlocked ? '' : 'locked' }}">
                             <button
