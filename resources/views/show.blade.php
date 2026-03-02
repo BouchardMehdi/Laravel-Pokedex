@@ -111,18 +111,23 @@
       {{-- ✅ Bouton Ajouter (mode team) --}}
       @if($isPickMode)
         <div class="pick-actions">
-          <form method="POST" action="{{ route('teams.slot.set', ['team' => $pickTeamId, 'slot' => (int)$pickSlot]) }}" class="pick-form">
-            @csrf
-            <input type="hidden" name="pokemon_id" value="{{ $pokemon->id }}">
-            <button class="variant-btn" type="submit">➕ Ajouter à la team (slot {{ (int)$pickSlot }})</button>
+          <form method="POST"
+                action="{{ route('teams.slot.set', ['team' => $pickTeamId, 'slot' => (int)$pickSlot]) }}"
+                class="pick-form">
+              @csrf
+              <input type="hidden" name="pokemon_id" value="{{ $pokemon->id }}">
+              <input type="hidden" name="form" id="selectedFormInput" value="normal">
+            <button class="variant-btn" type="submit">
+              ➕ Ajouter à la team (slot {{ (int)$pickSlot }})
+            </button>
           </form>
 
-          <a class="variant-btn" style="text-decoration:none;display:inline-flex;align-items:center;"
-             href="{{ route('teams.edit', $pickTeamId) }}">
-            ← Retour team
-          </a>
-        </div>
-      @endif
+    <a class="variant-btn"
+       href="{{ route('teams.edit', $pickTeamId) }}">
+        ← Retour team
+    </a>
+</div>
+@endif
 
       {{-- Stats (remplies/animées par JS) --}}
       <div class="stats" id="pokemonStats">

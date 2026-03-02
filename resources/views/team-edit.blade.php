@@ -20,6 +20,7 @@
     @if(session('success'))
         <div class="flash success">{{ session('success') }}</div>
     @endif
+
     @if(session('error'))
         <div class="flash error">{{ session('error') }}</div>
     @endif
@@ -38,7 +39,13 @@
             @method('PUT')
 
             <label class="label" for="name">Nom de la team</label>
-            <input class="input" id="name" name="name" type="text" maxlength="40" value="{{ old('name', $team->name) }}" required>
+            <input class="input"
+                   id="name"
+                   name="name"
+                   type="text"
+                   maxlength="40"
+                   value="{{ old('name', $team->name) }}"
+                   required>
 
             <div class="form-actions">
                 <button class="btn" type="submit">Enregistrer</button>
@@ -57,6 +64,7 @@
                     <div class="slot-title">Slot {{ $i }}</div>
 
                     @if($p)
+                        {{-- ✅ IMPORTANT : on utilise la route qui existe dans ton projet --}}
                         <form method="POST" action="{{ route('teams.slot.clear', ['team' => $team->id, 'slot' => $i]) }}">
                             @csrf
                             @method('DELETE')
@@ -66,19 +74,52 @@
                 </div>
 
                 @if($p)
+                    @php
+                        // ✅ Sécurise pivot (évite crash si pivot null)
+                        $form = optional($p->pivot)->form ?? 'normal';
+
+                        // ✅ Sécurise JSON forms
+                        $forms = is_array($p->forms)
+                            ? $p->forms
+                            : json_decode($p->forms ?? '{}', true);
+
+                        if (!is_array($forms)) {
+                            $forms = [];
+                        }
+
+                        // ✅ Choix de l’image selon la forme stockée
+                        if ($form === 'normal') {
+                            $img = $p->image_default;
+                        } else {
+                            $img = $forms[$form]['image_default'] ?? $p->image_default;
+                        }
+                    @endphp
+
                     <div class="slot-body">
                         <div class="slot-sprite">
-                            <img src="{{ asset($p->image_default) }}" alt="{{ $p->name }}" onerror="this.style.display='none'">
+                            <img src="{{ asset($img) }}" alt="{{ $p->name }}">
                         </div>
+
                         <div class="slot-info">
                             <div class="slot-name">{{ $p->name }}</div>
                             <div class="slot-meta">#{{ $p->pokedex_number }}</div>
+
+                            @if($form !== 'normal')
+                                <div class="slot-form">{{ strtoupper(str_replace('-', ' ', $form)) }}</div>
+                            @endif
                         </div>
                     </div>
 
                     <div class="slot-actions">
-                        <a class="btn secondary tiny" href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">Changer</a>
-                        <a class="btn tiny" href="{{ route('pokemons.show', $p) }}?pick_team={{ $team->id }}&slot={{ $i }}">Voir stats</a>
+                        <a class="btn secondary tiny"
+                           href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">
+                            Changer
+                        </a>
+
+                        <a class="btn tiny"
+                           href="{{ route('pokemons.show', $p) }}?pick_team={{ $team->id }}&slot={{ $i }}">
+                            Voir stats
+                        </a>
                     </div>
                 @else
                     <div class="slot-empty">

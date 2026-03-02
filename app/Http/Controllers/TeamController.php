@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $teams = Auth::user()
             ->teams()
             ->with(['pokemons' => function ($q) {
-                $q->orderBy('user_team_pokemon.slot');
+                $q->select('pokemons.id', 'name', 'slug', 'image_default')
+                  ->orderBy('user_team_pokemon.slot');
             }])
             ->latest()
             ->get();
@@ -32,24 +38,29 @@ class TeamController extends Controller
             'name' => ['required', 'string', 'max:40'],
         ]);
 
-        $team = UserTeam::create([
-            'user_id' => Auth::id(),
+        $team = Auth::user()->teams()->create([
             'name' => $request->name,
         ]);
 
-        return redirect()->route('teams.edit', $team)->with('success', 'Team créée !');
+        return redirect()->route('teams.edit', $team->id)
+            ->with('success', 'Team créée !');
     }
 
     public function edit(UserTeam $team)
     {
         $this->authorizeTeam($team);
 
-        $team->load('pokemons');
+        $team->load(['pokemons' => function ($q) {
+            $q->select('pokemons.id', 'name', 'slug', 'image_default', 'forms', 'pokedex_number')
+              ->orderBy('user_team_pokemon.slot');
+        }]);
+
         $slots = $team->slots_map;
 
         return view('team-edit', compact('team', 'slots'));
     }
 
+    // ✅ IMPORTANT : corrige ton 500 sur PUT /teams/{team}
     public function update(Request $request, UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -62,7 +73,7 @@ class TeamController extends Controller
             'name' => $request->name,
         ]);
 
-        return back()->with('success', 'Nom de la team mis à jour !');
+        return back()->with('success', 'Team enregistrée !');
     }
 
     public function destroy(UserTeam $team)
@@ -72,9 +83,11 @@ class TeamController extends Controller
         $team->pokemons()->detach();
         $team->delete();
 
-        return redirect()->route('teams.index')->with('success', 'Team supprimée.');
+        return redirect()->route('teams.index')
+            ->with('success', 'Team supprimée.');
     }
 
+    // clique sur "Choisir" / "Changer" => redirige pokedex en mode pick
     public function pick(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -87,6 +100,7 @@ class TeamController extends Controller
         ]);
     }
 
+    // ✅ Ajout Pokemon dans un slot (doublons autorisés)
     public function setSlot(Request $request, UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -95,27 +109,32 @@ class TeamController extends Controller
 
         $request->validate([
             'pokemon_id' => ['required', 'integer', 'exists:pokemons,id'],
+            'form' => ['nullable', 'string'],
         ]);
 
         $pokemonId = (int) $request->pokemon_id;
+        $form = $request->input('form', 'normal') ?: 'normal';
 
-        $isUnlocked = Auth::user()->pokemons()->where('pokemons.id', $pokemonId)->exists();
-        if (!$isUnlocked) {
-            return back()->with('error', "Tu dois d'abord débloquer ce Pokémon.");
-        }
-
+        // vide uniquement le slot ciblé
         $team->pokemons()->wherePivot('slot', $slot)->detach();
-        $team->pokemons()->detach($pokemonId);
-        $team->pokemons()->attach($pokemonId, ['slot' => $slot]);
 
-        return redirect()->route('teams.edit', $team)->with('success', "Pokémon ajouté au slot $slot !");
+        // attache (même pokemon ailleurs = OK)
+        $team->pokemons()->attach($pokemonId, [
+            'slot' => $slot,
+            'form' => $form,
+        ]);
+
+        return redirect()->route('teams.edit', $team->id)
+            ->with('success', "Pokémon ajouté au slot $slot !");
     }
 
+    // ✅ Route utilisée dans team-edit : teams.slot.clear
     public function clearSlot(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
 
         $slot = max(1, min(6, $slot));
+
         $team->pokemons()->wherePivot('slot', $slot)->detach();
 
         return back()->with('success', "Slot $slot vidé.");

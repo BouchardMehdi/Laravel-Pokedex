@@ -19,13 +19,16 @@ return new class extends Migration
                 ->constrained('pokemons')
                 ->cascadeOnDelete();
 
+            // forme sélectionnée (normal / mega / gmax / alola / blade / etc.)
+            $table->string('form')->nullable();
+
             $table->unsignedTinyInteger('slot');
 
             $table->timestamps();
 
+            // 1 seul Pokémon par slot dans une team
             $table->unique(['user_team_id', 'slot']);
 
-            $table->unique(['user_team_id', 'pokemon_id']);
         });
     }
 

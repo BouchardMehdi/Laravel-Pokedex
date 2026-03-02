@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
+use App\Models\UserTeam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,13 +61,14 @@ class PokemonController extends Controller
             ->limit(450)
             ->get(['id', 'name', 'slug', 'pokedex_number', 'image_default']);
 
-        // ✅ Toujours fournir $teams (même vide) -> pas d'erreur au logout
+        // ✅ Toujours défini (sinon home.blade.php peut crash au logout)
         $teams = collect();
 
-        if (Auth::check() && class_exists(\App\Models\UserTeam::class)) {
-            $teams = \App\Models\UserTeam::where('user_id', Auth::id())
+        if (Auth::check()) {
+            $teams = UserTeam::where('user_id', Auth::id())
                 ->with(['pokemons' => function ($q) {
-                    $q->select('pokemons.id', 'name', 'slug', 'image_default');
+                    $q->select('pokemons.id', 'name', 'slug', 'image_default')
+                      ->orderBy('user_team_pokemon.slot');
                 }])
                 ->orderBy('created_at', 'desc')
                 ->get();
@@ -103,7 +105,6 @@ class PokemonController extends Controller
 
     public function show(Pokemon $pokemon)
     {
-        // ✅ Chevrons prev/next (par numéro Pokédex)
         $prevPokemon = Pokemon::where('pokedex_number', '<', $pokemon->pokedex_number)
             ->orderBy('pokedex_number', 'desc')
             ->first();

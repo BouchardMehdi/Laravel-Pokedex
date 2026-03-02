@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const shinyToggle = document.getElementById('shinyToggle');
   const btnContainer = document.getElementById('variantButtons');
 
+  const selectedFormInput = document.getElementById('selectedFormInput');
   if (!dataEl || !img || !btnContainer) return;
 
   let variants = {};
@@ -70,15 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     currentVariantKey = key;
 
-    // active button
-    btnContainer.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+    if (selectedFormInput) {
+        selectedFormInput.value = key;
+    }
+
+    btnContainer.querySelectorAll('.variant-btn')
+        .forEach(b => b.classList.remove('active'));
+
     const btn = btnContainer.querySelector(`.variant-btn[data-variant="${CSS.escape(key)}"]`);
     if (btn) btn.classList.add('active');
 
-    // shiny toggle state UI
     shinyToggle?.classList.toggle('active', shinyOn);
 
-    // update UI
     setImage(variant);
     setTypes(variant.type1, variant.type2);
     setStats(variant.stats);
