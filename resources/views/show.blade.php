@@ -3,12 +3,10 @@
 
 @section('content')
 @php
-  // Mode "sélection pour une team"
   $pickTeamId = request('pick_team');
   $pickSlot = request('slot');
   $isPickMode = !empty($pickTeamId) && !empty($pickSlot);
 
-  // forms: suffix => {label, image_default, image_shiny, type1, type2, stats{...}}
   $forms = $pokemon->forms;
   if (is_string($forms)) {
     $decoded = json_decode($forms, true);
@@ -16,7 +14,6 @@
   }
   if (!is_array($forms)) $forms = [];
 
-  // Prépare les variants pour le JS
   $variants = [
     'normal' => [
       'key' => 'normal',
@@ -59,21 +56,19 @@
     ];
   }
 
-  // Liens navigation avec conservation des paramètres pick_team/slot
   $navQuery = $isPickMode ? ['pick_team' => $pickTeamId, 'slot' => $pickSlot] : [];
 @endphp
 
 <div class="pokemon-show-wrap">
 <div class="link type-badge">
-  <a href="{{ route('pokemons.index') }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}">← Retour aux Pokedex</a>
+  <a href="{{ route('pokemons.index') }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}">← Back to Pokédex</a>
 </div>
   <div class="pokemon-card">
 
-    {{-- ✅ Chevrons navigation --}}
     @if(!empty($prevPokemon))
       <a class="nav-chevron left"
          href="{{ route('pokemons.show', $prevPokemon) }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}"
-         aria-label="Pokémon précédent">
+         aria-label="Previous Pokémon">
         ‹
       </a>
     @endif
@@ -81,12 +76,11 @@
     @if(!empty($nextPokemon))
       <a class="nav-chevron right"
          href="{{ route('pokemons.show', $nextPokemon) }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}"
-         aria-label="Pokémon suivant">
+         aria-label="Next Pokémon">
         ›
       </a>
     @endif
 
-    {{-- Visuel --}}
     <div class="pokemon-visual">
       <img
         id="pokemonImage"
@@ -95,7 +89,6 @@
       >
     </div>
 
-    {{-- Infos --}}
     <div class="pokemon-info">
       <h1>#{{ str_pad($pokemon->pokedex_number, 4, '0', STR_PAD_LEFT) }} {{ ucfirst($pokemon->name) }}</h1>
 
@@ -108,7 +101,6 @@
         @endif
       </div>
 
-      {{-- ✅ Bouton Ajouter (mode team) --}}
       @if($isPickMode)
         <div class="pick-actions">
           <form method="POST"
@@ -118,18 +110,17 @@
               <input type="hidden" name="pokemon_id" value="{{ $pokemon->id }}">
               <input type="hidden" name="form" id="selectedFormInput" value="normal">
             <button class="variant-btn" type="submit">
-              ➕ Ajouter à la team (slot {{ (int)$pickSlot }})
+              ➕ Add to team (slot {{ (int)$pickSlot }})
             </button>
           </form>
 
-    <a class="variant-btn"
-       href="{{ route('teams.edit', $pickTeamId) }}">
-        ← Retour team
-    </a>
-</div>
-@endif
+          <a class="variant-btn"
+             href="{{ route('teams.edit', $pickTeamId) }}">
+              ← Back to team
+          </a>
+        </div>
+      @endif
 
-      {{-- Stats (remplies/animées par JS) --}}
       <div class="stats" id="pokemonStats">
         <div class="stat-row">
           <div class="stat-name">HP</div>
@@ -168,13 +159,11 @@
         </div>
       </div>
 
-      {{-- Data variants pour JS --}}
       <div
         id="pokemonVariantData"
         data-variants='@json($variants, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)'
       ></div>
 
-      {{-- Boutons variants + Toggle shiny --}}
       <div class="variant-buttons" id="variantButtons">
         @foreach($variants as $key => $v)
           <button

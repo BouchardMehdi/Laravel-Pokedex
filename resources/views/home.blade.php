@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pokédex — Suivi & Teams</title>
+    <title>Pokédex — Tracking & Teams</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/home.css'])
 </head>
@@ -20,7 +20,7 @@
                 $chunks = $pokemons->chunk(5);
             @endphp
 
-            {{-- On duplique pour scroll infini --}}
+            {{-- Duplicate for infinite scroll --}}
             @foreach([$chunks, $chunks] as $set)
                 @foreach($set as $row)
                     <div class="row">
@@ -45,20 +45,20 @@
 
 <div class="content">
     <div class="panel">
-        <div class="kicker">✨ Projet Laravel</div>
-        <h1>Suivi Pokédex & Création de Team Pokémon</h1>
+        <div class="kicker">✨ Laradex</div>
+        <h1>Pokédex Tracking & Pokémon Team Builder</h1>
 
         <p>
-            Un projet Laravel permettant de suivre les Pokémon que tu possèdes.
-            Débloque-les dans ton Pokédex personnel et bientôt crée tes propres équipes stratégiques.
+            A Laravel project that allows you to track the Pokémon you own.
+            Unlock them in your personal Pokédex and soon build your own strategic teams.
         </p>
 
         <div class="actions">
             @guest
-                <a class="btn primary" href="/login">Se connecter</a>
-                <a class="btn secondary" href="/register">Créer un compte</a>
+                <a class="btn primary" href="/login">Sign In</a>
+                <a class="btn secondary" href="/register">Create an Account</a>
             @else
-                <a class="btn primary" href="{{ route('pokemons.index') }}">Mon Pokédex</a>
+                <a class="btn primary" href="{{ route('pokemons.index') }}">My Pokédex</a>
 
                 <form method="POST" action="/logout" style="margin:0;">
                     @csrf
@@ -67,7 +67,7 @@
             @endguest
         </div>
 
-        {{-- Si ta home affiche aussi les teams, maintenant ça ne cassera plus au logout --}}
+        {{-- If home also displays teams, this won't break on logout --}}
         @auth
             @if($teams->count())
                 <div style="margin-top:16px; display:grid; gap:12px;">

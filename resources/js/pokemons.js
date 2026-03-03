@@ -55,14 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
         btn.classList.add('unlocked');
       }
-      if (text) text.textContent = 'Débloqué';
+      if (text) text.textContent = 'Unblocked';
     } else {
       sprite?.classList.add('locked');
       if (btn) {
         btn.disabled = false;
         btn.classList.remove('unlocked');
       }
-      if (text) text.textContent = 'Débloquer';
+      if (text) text.textContent = 'Unblock';
     }
   }
 
@@ -113,14 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setCardUnlocked(card, true);
       } else {
         btn.disabled = false;
-        if (text) text.textContent = 'Débloquer';
-        alert("Impossible de débloquer (réponse inattendue).");
+        if (text) text.textContent = 'Unblock';
+        alert("Unable to unlock (unexpected response).");
       }
     } catch (err) {
       btn.disabled = false;
-      if (text) text.textContent = 'Débloquer';
+      if (text) text.textContent = 'Unblock';
       console.error(err);
-      alert("Une erreur est survenue pendant le déblocage.");
+      alert("An error occurred during the unlocking process.");
     }
   });
 
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     toggleAllShinyBtn.classList.toggle('active', allShinyOn);
-    toggleAllShinyBtn.textContent = allShinyOn ? '✨ Tout normal' : '✨ Tout en shiny';
+    toggleAllShinyBtn.textContent = allShinyOn ? '✨ All normal' : '✨ All shiny';
   });
 
   // =========================
@@ -227,15 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
           setCardUnlocked(card, true);
         });
       } else {
-        alert("Réponse invalide serveur.");
+        alert("Invalid server response.");
       }
 
     } catch (err) {
       console.error(err);
-      alert("Erreur pendant 'Tout débloquer'.");
+      alert("Error during 'Unlock all'.");
     } finally {
       unlockAllBtn.disabled = false;
-      unlockAllBtn.textContent = "🔓 Tout débloquer";
+      unlockAllBtn.textContent = "🔓 Unlock everything";
     }
   });
 
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur pendant 'Tout bloquer'.");
+      alert("Error during 'Block all'.");
     } finally {
       lockAllBtn.disabled = false;
     }
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .filter(n => Number.isFinite(n));
 
     if (ids.length === 0) {
-      alert("Tous les Pokémon de cette page sont déjà débloqués.");
+      alert("All the Pokémon on this page are already unlocked.");
       return;
     }
 
@@ -285,14 +285,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         document.querySelectorAll('.card').forEach(card => setCardUnlocked(card, true));
       } else {
-        alert("Réponse invalide serveur.");
+        alert("Invalid server response.");
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur pendant 'Débloquer cette page'.");
+      alert("Error during 'Unlock this page'.");
     } finally {
       unlockPageBtn.disabled = false;
-      unlockPageBtn.textContent = '🔓 Débloquer cette page';
+      unlockPageBtn.textContent = '🔓 Unlock this page';
     }
   });
 
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const gen = parseInt(generationSelect?.value || '', 10);
     if (!Number.isFinite(gen)) {
-      alert("Choisis d'abord une génération dans le filtre (Gen 1, Gen 2...).");
+      alert("First, choose a generation in the filter (Gen 1, Gen 2...).");
       return;
     }
 
@@ -320,16 +320,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.success) {
         document.querySelectorAll('.card').forEach(card => setCardUnlocked(card, true));
-        alert(`Génération ${gen} débloquée !`);
+        alert(`Génération ${gen} unlocked !`);
       } else {
-        alert("Réponse invalide serveur.");
+        alert("Invalid server response.");
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur pendant 'Débloquer génération'.");
+      alert("Error during 'Unlock generation'.");
     } finally {
       unlockGenBtn.disabled = false;
-      unlockGenBtn.textContent = '🔓 Débloquer Gen';
+      unlockGenBtn.textContent = '🔓 Unlock Gen';
     }
   });
 });

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     variants = JSON.parse(dataEl.dataset.variants || '{}');
   } catch (e) {
-    console.error('Impossible de parser variants', e);
+    console.error('Unable to parse variants', e);
     variants = {};
   }
 

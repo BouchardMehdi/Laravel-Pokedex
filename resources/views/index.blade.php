@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mon Pokédex</title>
+    <title>My Pokédex</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -21,41 +21,41 @@
 
     <div class="topbar">
         <div>
-            <h1 class="title">Mon Pokédex</h1>
-            <p class="sub">Débloque tes Pokémon 🔓 • ✨ pour passer en shiny</p>
+            <h1 class="title">My Pokédex</h1>
+            <p class="sub">Unlock your Pokémon 🔓 • ✨ to switch to shiny</p>
 
             @if($isPickMode)
                 <p class="sub" style="margin-top:6px;">
-                    ✅ Mode ajout à une team — Slot {{ (int)$pickSlot }}
-                    • <a class="btn secondary" style="padding:6px 10px;border-radius:10px;font-size:12px;" href="{{ route('teams.edit', $pickTeamId) }}">Retour team</a>
+                    ✅ Add to team mode — Slot {{ (int)$pickSlot }}
+                    • <a class="btn secondary" style="padding:6px 10px;border-radius:10px;font-size:12px;" href="{{ route('teams.edit', $pickTeamId) }}">Back to team</a>
                 </p>
             @endif
         </div>
 
         <div class="right">
-            <a class="btn secondary" href="{{ route('home') }}">Accueil</a>
+            <a class="btn secondary" href="{{ route('home') }}">Home</a>
 
             @if(!$isPickMode)
-                <button type="button" class="btn secondary" id="toggleAllShinyBtn">✨ Tout en shiny</button>
+                <button type="button" class="btn secondary" id="toggleAllShinyBtn">✨ All shiny</button>
 
                 <button type="button" class="btn" id="unlockAllBtn" data-url="{{ route('pokemons.unlockAll') }}">
-                    🔓 Tout débloquer
+                    🔓 Unlock all
                 </button>
 
                 <button type="button" class="btn secondary" id="lockAllBtn" data-url="{{ route('pokemons.lockAll') }}">
-                    🔒 Tout bloquer
+                    🔒 Lock all
                 </button>
 
                 <button type="button" class="btn" id="unlockPageBtn" data-url="{{ route('pokemons.unlockPage') }}">
-                    🔓 Débloquer cette page
+                    🔓 Unlock this page
                 </button>
 
                 <button type="button" class="btn secondary" id="unlockGenBtn" data-url="{{ route('pokemons.unlockGeneration') }}">
-                    🔓 Débloquer Gen
+                    🔓 Unlock Generation
                 </button>
             @endif
 
-            <a class="btn secondary" href="{{ route('teams.index') }}">Mes teams</a>
+            <a class="btn secondary" href="{{ route('teams.index') }}">My teams</a>
 
             <form method="POST" action="/logout" style="margin:0;">
                 @csrf
@@ -72,14 +72,14 @@
 
         <div class="filters-grid">
             <div class="field">
-                <label for="q">Nom (recherche)</label>
-                <input id="q" type="text" name="q" value="{{ request('q') }}" placeholder="ex: Pikachu">
+                <label for="q">Name (search)</label>
+                <input id="q" type="text" name="q" value="{{ request('q') }}" placeholder="e.g. Pikachu">
             </div>
 
             <div class="field">
-                <label for="generation">Génération</label>
+                <label for="generation">Generation</label>
                 <select id="generation" name="generation">
-                    <option value="">Toutes</option>
+                    <option value="">All</option>
                     @foreach($generations as $gen)
                         <option value="{{ $gen }}" {{ (string)$gen === (string)request('generation') ? 'selected' : '' }}>
                             Gen {{ $gen }}
@@ -91,7 +91,7 @@
             <div class="field">
                 <label for="type">Type</label>
                 <select id="type" name="type">
-                    <option value="">Tous</option>
+                    <option value="">All</option>
                     @foreach($types as $t)
                         <option value="{{ $t }}" {{ (string)$t === (string)request('type') ? 'selected' : '' }}>
                             {{ $t }}
@@ -101,45 +101,45 @@
             </div>
 
             <div class="field">
-                <label for="special">Catégorie spéciale</label>
+                <label for="special">Special category</label>
                 <select id="special" name="special">
-                    <option value="">Tous</option>
-                    <option value="legendary" {{ request('special') === 'legendary' ? 'selected' : '' }}>Légendaires</option>
-                    <option value="fabulous"  {{ request('special') === 'fabulous'  ? 'selected' : '' }}>Fabuleux</option>
-                    <option value="ultra"     {{ request('special') === 'ultra'     ? 'selected' : '' }}>Ultra-Chimères</option>
+                    <option value="">All</option>
+                    <option value="legendary" {{ request('special') === 'legendary' ? 'selected' : '' }}>Legendary</option>
+                    <option value="fabulous"  {{ request('special') === 'fabulous'  ? 'selected' : '' }}>Mythical</option>
+                    <option value="ultra"     {{ request('special') === 'ultra'     ? 'selected' : '' }}>Ultra Beast</option>
                     <option value="paradox"   {{ request('special') === 'paradox'   ? 'selected' : '' }}>Paradox</option>
                 </select>
             </div>
 
-            {{-- ✅ Filtre forme (avec Paldea) --}}
+            {{-- Form filter --}}
             <div class="field">
-                <label for="form">Forme</label>
+                <label for="form">Form</label>
                 <select id="form" name="form">
-                    <option value="" {{ $formValue === '' ? 'selected' : '' }}>Toutes</option>
-                    <option value="mega"  {{ $formValue === 'mega'  ? 'selected' : '' }}>Méga</option>
+                    <option value="" {{ $formValue === '' ? 'selected' : '' }}>All</option>
+                    <option value="mega"  {{ $formValue === 'mega'  ? 'selected' : '' }}>Mega</option>
                     <option value="gmax"  {{ $formValue === 'gmax'  ? 'selected' : '' }}>Gmax</option>
                     <option value="alola" {{ $formValue === 'alola' ? 'selected' : '' }}>Alola</option>
                     <option value="galar" {{ $formValue === 'galar' ? 'selected' : '' }}>Galar</option>
                     <option value="hisui" {{ $formValue === 'hisui' ? 'selected' : '' }}>Hisui</option>
                     <option value="paldea" {{ $formValue === 'paldea' ? 'selected' : '' }}>Paldea</option>
-                    <option value="other" {{ $formValue === 'other' ? 'selected' : '' }}>Autres formes</option>
+                    <option value="other" {{ $formValue === 'other' ? 'selected' : '' }}>Other forms</option>
                 </select>
             </div>
         </div>
 
         <div class="row-actions">
             <div class="left-actions">
-                <button class="btn" type="submit">Appliquer</button>
-                <a class="btn secondary" href="{{ route('pokemons.index', $isPickMode ? ['pick_team'=>$pickTeamId,'slot'=>$pickSlot] : []) }}">Réinitialiser</a>
+                <button class="btn" type="submit">Apply</button>
+                <a class="btn secondary" href="{{ route('pokemons.index', $isPickMode ? ['pick_team'=>$pickTeamId,'slot'=>$pickSlot] : []) }}">Reset</a>
             </div>
             <div class="small">
-                Résultats : {{ $pokemons->total() }} • Page {{ $pokemons->currentPage() }} / {{ $pokemons->lastPage() }}
+                Results: {{ $pokemons->total() }} • Page {{ $pokemons->currentPage() }} / {{ $pokemons->lastPage() }}
             </div>
         </div>
     </form>
 
     @if($pokemons->count() === 0)
-        <p>Aucun pokémon trouvé avec ces filtres.</p>
+        <p>No Pokémon found with these filters.</p>
     @else
         <div class="grid">
             @foreach($pokemons as $pokemon)
@@ -180,9 +180,9 @@
                                 <span class="badge">{{ $pokemon->type1 }}</span>
                                 @if($pokemon->type2)<span class="badge">{{ $pokemon->type2 }}</span>@endif
 
-                                @if($pokemon->is_legendary)<span class="badge legend">Légendaire</span>@endif
-                                @if($pokemon->is_fabulous)<span class="badge fabulous">Fabuleux</span>@endif
-                                @if($pokemon->is_ultra_beast)<span class="badge ultra">Ultra-Chimère</span>@endif
+                                @if($pokemon->is_legendary)<span class="badge legend">Legendary</span>@endif
+                                @if($pokemon->is_fabulous)<span class="badge fabulous">Mythical</span>@endif
+                                @if($pokemon->is_ultra_beast)<span class="badge ultra">Ultra Beast</span>@endif
                                 @if($pokemon->is_paradox)<span class="badge paradox">Paradox</span>@endif
                             </div>
                         </div>
@@ -190,14 +190,14 @@
 
                     <div class="card-bottom">
                         <div class="bottom-left">
-                            <div class="small">Génération {{ $pokemon->generation }}</div>
+                            <div class="small">Generation {{ $pokemon->generation }}</div>
 
                             @if($isPickMode)
                                 <form method="POST" action="{{ route('teams.slot.set', ['team' => $pickTeamId, 'slot' => (int)$pickSlot]) }}" style="margin:0;">
                                     @csrf
                                     <input type="hidden" name="pokemon_id" value="{{ $pokemon->id }}">
                                     <button class="unlock-btn" type="submit" {{ $isUnlocked ? '' : 'disabled' }}>
-                                        ➕ <span class="unlock-text">{{ $isUnlocked ? 'Ajouter' : 'Bloqué' }}</span>
+                                        ➕ <span class="unlock-text">{{ $isUnlocked ? 'Add' : 'Locked' }}</span>
                                     </button>
                                 </form>
                             @else
@@ -208,13 +208,13 @@
                                     data-url="{{ route('pokemons.unlock', $pokemon) }}"
                                     {{ $isUnlocked ? 'disabled' : '' }}
                                 >
-                                    🔓 <span class="unlock-text">{{ $isUnlocked ? 'Débloqué' : 'Débloquer' }}</span>
+                                    🔓 <span class="unlock-text">{{ $isUnlocked ? 'Unlocked' : 'Unlock' }}</span>
                                 </button>
                             @endif
                         </div>
 
                         <a class="btn" href="{{ route('pokemons.show', $pokemon) }}{{ $isPickMode ? ('?pick_team='.$pickTeamId.'&slot='.$pickSlot) : '' }}">
-                            Voir plus →
+                            View more →
                         </a>
                     </div>
                 </div>
@@ -223,17 +223,17 @@
 
         <div class="pagination" id="pagination">
             @if ($pokemons->onFirstPage())
-                <span class="page disabled">← Précédent</span>
+                <span class="page disabled">← Previous</span>
             @else
-                <a class="page" href="{{ $pokemons->appends(request()->query())->previousPageUrl() }}">← Précédent</a>
+                <a class="page" href="{{ $pokemons->appends(request()->query())->previousPageUrl() }}">← Previous</a>
             @endif
 
             <span class="page current">Page {{ $pokemons->currentPage() }} / {{ $pokemons->lastPage() }}</span>
 
             @if ($pokemons->hasMorePages())
-                <a class="page" href="{{ $pokemons->appends(request()->query())->nextPageUrl() }}">Suivant →</a>
+                <a class="page" href="{{ $pokemons->appends(request()->query())->nextPageUrl() }}">Next →</a>
             @else
-                <span class="page disabled">Suivant →</span>
+                <span class="page disabled">Next →</span>
             @endif
         </div>
     @endif

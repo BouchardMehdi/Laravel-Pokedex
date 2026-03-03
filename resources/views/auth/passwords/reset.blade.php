@@ -4,10 +4,10 @@
 <div class="auth-wrapper">
     <div class="auth-card">
 
-        <h1 class="auth-title">Nouveau mot de passe</h1>
+        <h1 class="auth-title">New Password</h1>
 
         <p class="auth-sub">
-            Choisis un nouveau mot de passe sécurisé.
+            Choose a secure new password.
         </p>
 
         <form method="POST" action="{{ route('password.update') }}">
@@ -17,7 +17,7 @@
 
             {{-- Email --}}
             <div class="form-group">
-                <label for="email">Adresse email</label>
+                <label for="email">Email Address</label>
                 <input
                     id="email"
                     type="email"
@@ -31,16 +31,16 @@
                 @enderror
             </div>
 
-            {{-- Nouveau mot de passe --}}
+            {{-- New password --}}
             <div class="form-group">
-                <label for="password">Nouveau mot de passe</label>
+                <label for="password">New Password</label>
                 <input
                     id="password"
                     type="password"
                     name="password"
                     required
                     autocomplete="new-password"
-                    placeholder="Minimum 8 caractères"
+                    placeholder="Minimum 8 characters"
                 >
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -49,24 +49,24 @@
 
             {{-- Confirmation --}}
             <div class="form-group">
-                <label for="password-confirm">Confirmer le mot de passe</label>
+                <label for="password-confirm">Confirm Password</label>
                 <input
                     id="password-confirm"
                     type="password"
                     name="password_confirmation"
                     required
                     autocomplete="new-password"
-                    placeholder="Confirme ton mot de passe"
+                    placeholder="Confirm your password"
                 >
             </div>
 
             <button type="submit" class="btn-auth">
-                Réinitialiser le mot de passe
+                Reset Password
             </button>
         </form>
 
         <div class="auth-links">
-            <a href="{{ route('login') }}">← Retour à la connexion</a>
+            <a href="{{ route('login') }}">← Back to Login</a>
         </div>
 
     </div>

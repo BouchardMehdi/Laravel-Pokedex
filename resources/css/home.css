@@ -14,7 +14,6 @@
             overflow:hidden;
         }
 
-        /* Background gradient */
         .bg{
             position:fixed;
             inset:0;
@@ -25,7 +24,6 @@
                 radial-gradient(800px 800px at 50% 90%, rgba(52,211,153,.10), transparent 60%);
         }
 
-        /* Vertical scroll container */
         .marquee-wrap{
             position:absolute;
             inset:0;
@@ -45,7 +43,6 @@
             to   { transform: translateY(-50%); }
         }
 
-        /* Each row contains 5 pokémon */
         .row{
             display:grid;
             grid-template-columns: repeat(5, 1fr);
@@ -53,7 +50,6 @@
             padding: 0 40px;
         }
 
-        /* Bigger cards */
         .mini{
             height:120px;
             border-radius:22px;
@@ -80,7 +76,6 @@
             text-align:center;
         }
 
-        /* Foreground panel */
         .content{
             position:relative;
             z-index:2;
@@ -162,7 +157,6 @@
             opacity:.95;
         }
 
-        /* vignette */
         .vignette{
             position:fixed;
             inset:0;
@@ -171,7 +165,6 @@
             background: radial-gradient(70% 60% at 50% 50%, transparent 35%, rgba(0,0,0,.7) 100%);
         }
 
-/* ✅ Responsive home: grille des mini cartes */
 @media (max-width: 900px){
     .row{
         grid-template-columns: repeat(3, 1fr);

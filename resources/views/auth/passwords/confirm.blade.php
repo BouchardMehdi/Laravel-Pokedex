@@ -4,17 +4,17 @@
 <div class="auth-wrapper">
     <div class="auth-card">
 
-        <h1 class="auth-title">Confirmation requise</h1>
+        <h1 class="auth-title">Confirmation required</h1>
 
         <p class="auth-sub">
-            Pour continuer, confirme ton mot de passe.
+            To continue, confirm your password.
         </p>
 
         <form method="POST" action="{{ route('password.confirm') }}">
             @csrf
 
             <div class="form-group">
-                <label for="password">Mot de passe</label>
+                <label for="password">Password</label>
                 <input
                     id="password"
                     type="password"
@@ -30,12 +30,12 @@
             </div>
 
             <button type="submit" class="btn-primary">
-                Confirmer
+                Confirm
             </button>
         </form>
 
         <div class="auth-links">
-            <a href="{{ route('password.request') }}">Mot de passe oublié ?</a>
+            <a href="{{ route('password.request') }}">Forgot your password?</a>
         </div>
 
     </div>

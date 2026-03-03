@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (selected.length >= MAX) {
-      alert('Max 6 Pokémon par team.');
+      alert('Team of up to 6 Pokémon.');
       return;
     }
     selected.push(pid);

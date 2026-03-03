@@ -3,16 +3,27 @@
 @vite(['resources/css/teams.css'])
 
 @section('content')
-<div class="teams-container">
+<div class="teams-container create">
+
     <div class="teams-topbar">
         <div>
-            <h1 class="teams-title">Créer une Team</h1>
-            <p class="teams-sub">Donne un nom à ta team, puis tu pourras choisir tes 6 slots.</p>
+            <h1 class="teams-title">Create a Team</h1>
+            <p class="teams-sub">Create your team (max 6 Pokémon).</p>
         </div>
+
         <div class="teams-actions">
-            <a class="btn secondary" href="{{ route('teams.index') }}">← Mes teams</a>
+            <a class="btn secondary" href="{{ route('teams.index') }}">← My teams</a>
+            <a class="btn secondary" href="{{ route('pokemons.index') }}">Pokédex</a>
         </div>
     </div>
+
+    @if(session('success'))
+        <div class="flash success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="flash error">{{ session('error') }}</div>
+    @endif
 
     @if($errors->any())
         <div class="flash error">
@@ -26,14 +37,22 @@
         <form method="POST" action="{{ route('teams.store') }}" class="team-form">
             @csrf
 
-            <label class="label" for="name">Nom de la team</label>
-            <input class="input" id="name" name="name" type="text" maxlength="40" placeholder="ex: Team Kanto" value="{{ old('name') }}" required>
+            <label class="label" for="name">Team name</label>
+            <input class="input"
+                   id="name"
+                   name="name"
+                   type="text"
+                   maxlength="40"
+                   value="{{ old('name') }}"
+                   placeholder="exemple: Kanto team"
+                   required>
 
             <div class="form-actions">
-                <button class="btn" type="submit">Créer</button>
-                <a class="btn secondary" href="{{ route('teams.index') }}">Annuler</a>
+                <button class="btn" type="submit">Create</button>
+                <a class="btn secondary" href="{{ route('teams.index') }}">Cancel</a>
             </div>
         </form>
     </div>
+
 </div>
 @endsection

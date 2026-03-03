@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mot de passe oublié</title>
+    <title>Forgot Password</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @vite(['resources/css/auth.css'])
@@ -10,13 +10,13 @@
 <body>
 
 <div class="auth-card">
-    <div class="auth-title">Mot de passe oublié</div>
+    <div class="auth-title">Forgot Password</div>
 
     <p style="margin-top:-10px; margin-bottom:18px; color:#9fb0c0; font-size:13px; line-height:1.5;">
-        Entre ton adresse email et on t’enverra un lien pour réinitialiser ton mot de passe.
+        Enter your email address and we will send you a link to reset your password.
     </p>
 
-    {{-- Message de succès --}}
+    {{-- Success message --}}
     @if (session('status'))
         <div style="padding:10px 12px; border-radius:14px; margin-bottom:14px;
                     background:rgba(34,197,94,.10); border:1px solid rgba(34,197,94,.35);">
@@ -31,7 +31,7 @@
         @csrf
 
         <div class="form-group">
-            <label for="email">Adresse email</label>
+            <label for="email">Email Address</label>
             <input
                 id="email"
                 type="email"
@@ -40,7 +40,7 @@
                 required
                 autocomplete="email"
                 autofocus
-                placeholder="ex: mehdi@gmail.com"
+                placeholder="e.g. mehdi@gmail.com"
             >
 
             @error('email')
@@ -49,14 +49,14 @@
         </div>
 
         <button type="submit" class="btn-auth">
-            Envoyer le lien de réinitialisation
+            Send Password Reset Link
         </button>
     </form>
 
     <div class="auth-links" style="margin-top:16px;">
-        <a href="{{ route('login') }}">← Retour à la connexion</a>
+        <a href="{{ route('login') }}">← Back to Login</a>
         <span style="opacity:.4; margin:0 8px;">•</span>
-        <a href="{{ route('register') }}">Créer un compte</a>
+        <a href="{{ route('register') }}">Create an Account</a>
     </div>
 </div>
 

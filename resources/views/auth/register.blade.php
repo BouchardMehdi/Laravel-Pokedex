@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inscription</title>
+    <title>Register</title>
 
     @vite(['resources/css/auth.css'])
 </head>
 <body>
 
 <div class="auth-card">
-    <h2 class="auth-title">Inscription</h2>
+    <h2 class="auth-title">Register</h2>
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
         <div class="form-group">
-            <label for="name">Nom</label>
+            <label for="name">Name</label>
             <input id="name"
                    type="text"
                    name="name"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="form-group">
-            <label for="email">Adresse e-mail</label>
+            <label for="email">Email Address</label>
             <input id="email"
                    type="email"
                    name="email"
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Mot de passe</label>
+            <label for="password">Password</label>
             <input id="password"
                    type="password"
                    name="password"
@@ -55,7 +55,7 @@
         </div>
 
         <div class="form-group">
-            <label for="password-confirm">Confirmer le mot de passe</label>
+            <label for="password-confirm">Confirm Password</label>
             <input id="password-confirm"
                    type="password"
                    name="password_confirmation"
@@ -63,10 +63,10 @@
                    autocomplete="new-password">
         </div>
 
-        <button type="submit" class="btn-auth">Créer mon compte</button>
+        <button type="submit" class="btn-auth">Create Account</button>
 
         <div class="auth-links">
-            <a href="{{ route('login') }}">Déjà un compte ? Se connecter</a>
+            <a href="{{ route('login') }}">Already have an account? Sign in</a>
         </div>
     </form>
 </div>

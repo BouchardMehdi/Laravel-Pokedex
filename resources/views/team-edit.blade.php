@@ -3,16 +3,16 @@
 @vite(['resources/css/teams.css'])
 
 @section('content')
-<div class="teams-container">
+<div class="teams-container edit">
 
     <div class="teams-topbar">
         <div>
-            <h1 class="teams-title">Modifier la Team</h1>
-            <p class="teams-sub">Clique sur un slot pour choisir un Pokémon (max 6).</p>
+            <h1 class="teams-title">Edit Team</h1>
+            <p class="teams-sub">Click a slot to pick a Pokémon (max 6).</p>
         </div>
 
         <div class="teams-actions">
-            <a class="btn secondary" href="{{ route('teams.index') }}">← Mes teams</a>
+            <a class="btn secondary" href="{{ route('teams.index') }}">← My Teams</a>
             <a class="btn secondary" href="{{ route('pokemons.index') }}">Pokédex</a>
         </div>
     </div>
@@ -38,7 +38,7 @@
             @csrf
             @method('PUT')
 
-            <label class="label" for="name">Nom de la team</label>
+            <label class="label" for="name">Team name</label>
             <input class="input"
                    id="name"
                    name="name"
@@ -48,7 +48,7 @@
                    required>
 
             <div class="form-actions">
-                <button class="btn" type="submit">Enregistrer</button>
+                <button class="btn" type="submit">Save</button>
             </div>
         </form>
     </div>
@@ -64,11 +64,10 @@
                     <div class="slot-title">Slot {{ $i }}</div>
 
                     @if($p)
-                        {{-- ✅ IMPORTANT : on utilise la route qui existe dans ton projet --}}
                         <form method="POST" action="{{ route('teams.slot.clear', ['team' => $team->id, 'slot' => $i]) }}">
                             @csrf
                             @method('DELETE')
-                            <button class="btn tiny danger edit" type="submit">Retirer</button>
+                            <button class="btn tiny danger edit" type="submit">Remove</button>
                         </form>
                     @endif
                 </div>
@@ -81,16 +80,11 @@
                             ? $p->forms
                             : json_decode($p->forms ?? '{}', true);
 
-                        if (!is_array($forms)) {
-                            $forms = [];
-                        }
+                        if (!is_array($forms)) $forms = [];
 
-                        // Choix de l’image selon la forme stockée
-                        if ($form === 'normal') {
-                            $img = $p->image_default;
-                        } else {
-                            $img = $forms[$form]['image_default'] ?? $p->image_default;
-                        }
+                        $img = ($form === 'normal')
+                            ? $p->image_default
+                            : ($forms[$form]['image_default'] ?? $p->image_default);
                     @endphp
 
                     <div class="slot-body">
@@ -111,23 +105,23 @@
                     <div class="slot-actions">
                         <a class="btn tiny change"
                            href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">
-                            Changer
+                            Change
                         </a>
 
                         <a class="btn tiny"
                            href="{{ route('pokemons.show', $p) }}?pick_team={{ $team->id }}&slot={{ $i }}">
-                            Voir stats
+                            View stats
                         </a>
                     </div>
                 @else
                     <div class="slot-empty">
-                        <div class="slot-empty-text">Aucun Pokémon</div>
-                        <a class="btn" href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">Choisir</a>
+                        <div class="slot-empty-text">No Pokémon</div>
+                        <a class="btn" href="{{ route('teams.pick', ['team' => $team->id, 'slot' => $i]) }}">Pick</a>
                     </div>
                 @endif
             </div>
         @endfor
-    </div>
+    </div><br>
 
 </div>
 @endsection
