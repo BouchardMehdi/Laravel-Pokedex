@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pokédex — Tracking & Teams</title>
+    <title>Laradex — Pokédex & Teams</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/home.css'])
 </head>
@@ -10,20 +10,21 @@
 
 @php
     $teams = $teams ?? collect();
+
+    // Desktop: 5 colonnes
+    $chunksDesktop = $pokemons->chunk(5);
+
+    // Mobile: 2 colonnes
+    $chunksMobile  = $pokemons->chunk(2);
 @endphp
 
 <div class="bg">
-    <div class="marquee-wrap">
+
+    <div class="marquee-wrap marquee-desktop">
         <div class="marquee">
-
-            @php
-                $chunks = $pokemons->chunk(5);
-            @endphp
-
-            {{-- Duplicate for infinite scroll --}}
-            @foreach([$chunks, $chunks] as $set)
+            @foreach([$chunksDesktop, $chunksDesktop] as $set)
                 @foreach($set as $row)
-                    <div class="row">
+                    <div class="row row-5">
                         @foreach($row as $p)
                             @php
                                 $img = $p->image_default ?: ('images/default/' . ($p->slug ?? $p->name) . '.png');
@@ -36,9 +37,29 @@
                     </div>
                 @endforeach
             @endforeach
-
         </div>
     </div>
+
+    <div class="marquee-wrap marquee-mobile">
+        <div class="marquee">
+            @foreach([$chunksMobile, $chunksMobile] as $set)
+                @foreach($set as $row)
+                    <div class="row row-2">
+                        @foreach($row as $p)
+                            @php
+                                $img = $p->image_default ?: ('images/default/' . ($p->slug ?? $p->name) . '.png');
+                            @endphp
+                            <div class="mini">
+                                <img src="{{ asset($img) }}" alt="{{ $p->name }}" loading="lazy" onerror="this.style.display='none'">
+                                <div class="n">{{ $p->name }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach
+            @endforeach
+        </div>
+    </div>
+
 </div>
 
 <div class="vignette"></div>
@@ -46,17 +67,17 @@
 <div class="content">
     <div class="panel">
         <div class="kicker">✨ Laradex</div>
-        <h1>Pokédex Tracking & Pokémon Team Builder</h1>
+        <h1>Pokédex Tracking & Team Builder</h1>
 
         <p>
-            A Laravel project that allows you to track the Pokémon you own.
-            Unlock them in your personal Pokédex and soon build your own strategic teams.
+            A Laravel project to track the Pokémon you own.
+            Unlock them in your personal Pokédex and build your strategic teams.
         </p>
 
         <div class="actions">
             @guest
-                <a class="btn primary" href="/login">Sign In</a>
-                <a class="btn secondary" href="/register">Create an Account</a>
+                <a class="btn primary" href="/login">Login</a>
+                <a class="btn secondary" href="/register">Create account</a>
             @else
                 <a class="btn primary" href="{{ route('pokemons.index') }}">My Pokédex</a>
 
@@ -67,7 +88,6 @@
             @endguest
         </div>
 
-        {{-- If home also displays teams, this won't break on logout --}}
         @auth
             @if($teams->count())
                 <div style="margin-top:16px; display:grid; gap:12px;">
