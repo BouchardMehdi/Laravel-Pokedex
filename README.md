@@ -131,23 +131,75 @@ Exemples supportés :
 
 # Structure du Projet
 
-app/
-Http/Controllers/
-Models/
-
-database/
-migrations/
-seeders/
-database.sqlite
-
-resources/
-views/
-css/
-js/
-
-routes/
-web.php
-
+```bash
+Laravel-Pokedex/
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       ├── PokemonController.php          # Home + Pokédex + page show
+│   │       ├── UserPokemonController.php      # Déblocage (unlock) des Pokémon
+│   │       └── TeamController.php             # CRUD teams + slots (1..6) + pick mode
+│   └── Models/
+│       ├── Pokemon.php                        # Modèle Pokémon (+ forms JSON)
+│       ├── User.php                           # User + relations (pokemons, teams)
+│       └── UserTeam.php                       # Team d'un utilisateur
+│
+├── database/
+│   ├── migrations/
+│   │   ├── create_pokemons_table.php          # Table pokemons
+│   │   ├── create_pokemon_user_table.php      # Pivot unlock: pokemon_user
+│   │   ├── create_user_teams_table.php        # Table user_teams
+│   │   └── create_user_team_pokemon_table.php # Pivot team: user_team_pokemon (slot + form)
+│   │
+│   ├── seeders/
+│   │   ├── DatabaseSeeder.php                 # Seeder principal
+│   │   └── PokemonSeeder.php                  # Import Pokémon depuis JSON
+│   │
+│   ├── database.sqlite                        # Base SQLite (dev)
+│   └── pokemon.json                           # Source des données Pokémon / formes
+│
+├── resources/
+│   ├── views/
+│   │   ├── home.blade.php                     # Landing (background animé)
+│   │   ├── index.blade.php                    # Pokédex + filtres + unlock
+│   │   ├── show.blade.php                     # Détails Pokémon + formes + shiny + nav
+│   │   ├── teams.blade.php                    # Liste des teams
+│   │   ├── team-create.blade.php              # Création team
+│   │   ├── team-edit.blade.php                # Edition team + slots
+│   │   ├── layouts/
+│   │   │   └── app.blade.php                  # Layout global
+│   │   └── auth/
+│   │       ├── login.blade.php                # Connexion
+│   │       ├── register.blade.php             # Inscription
+│   │       ├── verify.blade.php               # Vérification email
+│   │       ├── confirm.blade.php              # Confirmation password
+│   │       ├── email.blade.php                # Forgot password
+│   │       └── reset.blade.php                # Reset password
+│   │
+│   ├── css/
+│   │   ├── app.css                            # Global UI
+│   │   ├── home.css                           # Landing animation
+│   │   ├── pokemons.css                       # Pokédex
+│   │   ├── pokemon-show.css                   # Page show
+│   │   ├── teams.css                          # Teams pages
+│   │   └── auth.css                           # Auth pages
+│   │
+│   └── js/
+│       ├── app.js                             # JS global
+│       ├── pokemons.js                        # Unlock + shiny + actions Pokédex
+│       └── pokemon-show.js                    # Variants + shiny toggle + stats
+│
+├── routes/
+│   └── web.php                                # Routes web (pokemons, teams, auth)
+│
+├── public/
+│   └── images/
+│       ├── default/                           # Sprites normal
+│       ├── shiny/                             # Sprites shiny
+│       └── logo.png                           # Logo Laradex (README + mails)
+│
+└── README.md
+```
 ---
 
 # Schéma de Base de Données
