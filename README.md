@@ -276,7 +276,7 @@ npm install
 ```bash
 APP_NAME=Laradex
 APP_ENV=local
-APP_KEY=base64:8R5CdC1FBKsAF0nHdcTdIQbsew5fQOScGDvdngj0G0E=
+APP_KEY=base64:**************
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
