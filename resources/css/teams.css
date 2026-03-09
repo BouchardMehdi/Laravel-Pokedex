@@ -20,12 +20,7 @@ body{
   max-width:1100px;
 }
 
-.teams-container.show {
-  margin-bottom: 35%;
-}
-@media (max-width: 520px) {
-  .teams-container.show {margin-bottom: 130%;}
-}
+
 
 .teams-container.create {
   margin-bottom: 30%;
