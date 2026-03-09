@@ -15,7 +15,6 @@
   --barBg: rgba(255,255,255,12);
 }
 
-/* Fond global */
 html, body{
   height: 100%;
 }
@@ -27,7 +26,6 @@ body{
   color:#e6edf3;
 }
 
-/* (si ton layout cache la navbar) */
 nav,
 header{
   display: none !important;
