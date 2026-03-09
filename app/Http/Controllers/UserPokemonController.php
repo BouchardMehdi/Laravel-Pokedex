@@ -5,39 +5,55 @@ namespace App\Http\Controllers;
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserPokemonController extends Controller
 {
     public function store(Pokemon $pokemon)
     {
-        $user = Auth::user();
-
-        $user->pokemons()->syncWithoutDetaching([$pokemon->id]);
+        DB::table('pokemon_user')->updateOrInsert(
+            [
+                'user_id' => Auth::id(),
+                'pokemon_id' => $pokemon->id,
+            ],
+            [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
 
         return response()->json(['success' => true]);
     }
-    
-    // débloquer tous les pokemons
+
     public function unlockAll()
     {
-        $user = Auth::user();
         $ids = Pokemon::pluck('id')->toArray();
 
-        $user->pokemons()->syncWithoutDetaching($ids);
+        foreach ($ids as $pokemonId) {
+            DB::table('pokemon_user')->updateOrInsert(
+                [
+                    'user_id' => Auth::id(),
+                    'pokemon_id' => $pokemonId,
+                ],
+                [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
 
         return response()->json(['success' => true]);
     }
 
-    // bloquer tous les pokemons
     public function lockAll()
     {
-        $user = Auth::user();
-        $user->pokemons()->detach();
+        DB::table('pokemon_user')
+            ->where('user_id', Auth::id())
+            ->delete();
 
         return response()->json(['success' => true]);
     }
 
-    // débloquer les pokemons affichés sur la page
     public function unlockPage(Request $request)
     {
         $request->validate([
@@ -45,23 +61,48 @@ class UserPokemonController extends Controller
             'ids.*' => ['integer', 'exists:pokemons,id'],
         ]);
 
-        $user = Auth::user();
-        $user->pokemons()->syncWithoutDetaching($request->ids);
+        foreach ($request->ids as $pokemonId) {
+            DB::table('pokemon_user')->updateOrInsert(
+                [
+                    'user_id' => Auth::id(),
+                    'pokemon_id' => $pokemonId,
+                ],
+                [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
 
         return response()->json(['success' => true]);
     }
 
-    // débloquer une génération entière
     public function unlockGeneration(Request $request)
     {
         $request->validate([
-            'generation' => ['required', 'integer', 'min:1', 'max:20'],
+            'generation' => ['required', 'integer', 'min:1', 'max:10'],
         ]);
 
-        $ids = Pokemon::where('generation', (int) $request->generation)->pluck('id')->toArray();
+        $ids = Pokemon::where('generation', (int) $request->generation)
+            ->pluck('id')
+            ->toArray();
 
-        Auth::user()->pokemons()->syncWithoutDetaching($ids);
+        foreach ($ids as $pokemonId) {
+            DB::table('pokemon_user')->updateOrInsert(
+                [
+                    'user_id' => Auth::id(),
+                    'pokemon_id' => $pokemonId,
+                ],
+                [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
 
-        return response()->json(['success' => true, 'count' => count($ids)]);
+        return response()->json([
+            'success' => true,
+            'count' => count($ids),
+        ]);
     }
 }

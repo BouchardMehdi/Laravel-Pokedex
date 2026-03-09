@@ -6,6 +6,7 @@ use App\Models\UserTeam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class TeamController extends Controller
 {
     public function __construct()
@@ -15,8 +16,7 @@ class TeamController extends Controller
 
     public function index()
     {
-        $teams = Auth::user()
-            ->teams()
+        $teams = UserTeam::where('user_id', Auth::id())
             ->with(['pokemons' => function ($q) {
                 $q->select('pokemons.id', 'name', 'slug', 'image_default', 'forms', 'pokedex_number')
                   ->orderBy('user_team_pokemon.slot');
@@ -32,14 +32,14 @@ class TeamController extends Controller
         return view('team-create');
     }
 
-    // Créer team
     public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:40'],
         ]);
 
-        $team = Auth::user()->teams()->create([
+        $team = UserTeam::create([
+            'user_id' => Auth::id(),
             'name' => $request->name,
         ]);
 
@@ -47,7 +47,6 @@ class TeamController extends Controller
             ->with('success', 'Team créée !');
     }
 
-    // modifier team
     public function edit(UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -62,7 +61,6 @@ class TeamController extends Controller
         return view('team-edit', compact('team', 'slots'));
     }
 
-    // Save team
     public function update(Request $request, UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -78,7 +76,6 @@ class TeamController extends Controller
         return back()->with('success', 'Team enregistrée !');
     }
 
-    // supprimer team
     public function destroy(UserTeam $team)
     {
         $this->authorizeTeam($team);
@@ -90,7 +87,6 @@ class TeamController extends Controller
             ->with('success', 'Team supprimée.');
     }
 
-    // choisir un pokemon
     public function pick(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -103,7 +99,6 @@ class TeamController extends Controller
         ]);
     }
 
-    // ajoute pokemon dans la team
     public function setSlot(Request $request, UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);
@@ -129,7 +124,6 @@ class TeamController extends Controller
             ->with('success', "Pokémon ajouté au slot $slot !");
     }
 
-    // supprime pokemon dans la team
     public function clearSlot(UserTeam $team, int $slot)
     {
         $this->authorizeTeam($team);

@@ -36,6 +36,8 @@
             <a class="btn secondary" href="{{ route('home') }}">Home</a>
 
             @if(!$isPickMode)
+                <a class="btn secondary" href="{{ route('pokemons.manage') }}">Manage Pokémon</a>
+
                 <button type="button" class="btn secondary" id="toggleAllShinyBtn">✨ All shiny</button>
 
                 <button type="button" class="btn" id="unlockAllBtn" data-url="{{ route('pokemons.unlockAll') }}">
@@ -111,7 +113,6 @@
                 </select>
             </div>
 
-            {{-- Form filter --}}
             <div class="field">
                 <label for="form">Form</label>
                 <select id="form" name="form">

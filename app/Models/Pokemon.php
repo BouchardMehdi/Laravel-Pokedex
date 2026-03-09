@@ -42,7 +42,6 @@ class Pokemon extends Model
         'is_fabulous' => 'boolean',
         'is_ultra_beast' => 'boolean',
         'is_paradox' => 'boolean',
-
         'forms' => 'array',
     ];
 }

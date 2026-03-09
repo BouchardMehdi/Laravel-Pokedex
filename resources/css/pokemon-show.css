@@ -9,7 +9,6 @@
   --btnActiveText: #111827;
 }
 
-/* reset de la page pour éviter le centrage vertical global */
 html,
 body{
   min-height: 100%;
@@ -92,7 +91,6 @@ body > nav{
   white-space: nowrap;
 }
 
-/* chevrons desktop */
 .nav-chevron{
   position: absolute;
   top: 50%;
@@ -142,7 +140,6 @@ body > nav{
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35));
 }
 
-/* infos */
 .pokemon-info{
   min-width: 0;
 }
@@ -189,7 +186,6 @@ body > nav{
   text-decoration: none;
 }
 
-/* stats */
 .stats{
   display: grid;
   gap: 12px;
@@ -230,7 +226,6 @@ body > nav{
   background: linear-gradient(90deg, #facc15, #fb7185);
 }
 
-/* variants */
 .variant-buttons{
   margin-top: 22px;
   display: flex;
@@ -276,7 +271,6 @@ body > nav{
   color: #111827;
 }
 
-/* tablette / mobile */
 @media (max-width: 900px){
   .pokemon-show-page{
     padding-top: 22px;

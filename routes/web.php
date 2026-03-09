@@ -14,6 +14,15 @@ Route::get('/pokemons', [PokemonController::class, 'index'])
     ->middleware('auth')
     ->name('pokemons.index');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/pokemons/manage', [PokemonController::class, 'manage'])->name('pokemons.manage');
+    Route::get('/pokemons/create', [PokemonController::class, 'create'])->name('pokemons.create');
+    Route::post('/pokemons', [PokemonController::class, 'store'])->name('pokemons.store');
+    Route::get('/pokemons/{pokemon}/edit', [PokemonController::class, 'edit'])->name('pokemons.edit');
+    Route::put('/pokemons/{pokemon}', [PokemonController::class, 'update'])->name('pokemons.update');
+    Route::delete('/pokemons/{pokemon}', [PokemonController::class, 'destroy'])->name('pokemons.destroy');
+});
+
 Route::get('/pokemons/{pokemon}', [PokemonController::class, 'show'])
     ->name('pokemons.show');
 
